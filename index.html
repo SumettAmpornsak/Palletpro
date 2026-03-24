@@ -1,130 +1,775 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ถุงพลัส</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ถุงพลัส · PalletPro</title>
+    <meta name="description" content="ถุงพลัส PalletPro เว็บแอพคำนวนถุงและพาเลท" />
+    <meta name="keywords" content="ถุงพลัส, PalletPro,เว็บแอพคำนวนถุง,เว็บแอพคำนวนพาเลท" />
+    <meta name="author" content="Sumett Ampornsak" />
+    <link rel="icon"
+        href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
+        type="image/x-icon" />
+    <!-- PWA Meta -->
+    <meta name="theme-color" content="#4c8b3c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ถุงพลัส">
+    <link rel="apple-touch-icon"
+        href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png">
+
+    <!-- Bootstrap 5 + Icons + core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Google Fonts (Kanit ) -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        body { font-family: 'Kanit', sans-serif; }
-        input[type="number"] { font-size: 1.5rem; }
-        .base-input { font-size: 1.2rem; }
-    </style>
-</head>
-<body class="bg-gray-100 min-h-screen pb-32">
-
-    <div class="max-w-md mx-auto p-4">
-        <header class="mb-6 pt-4">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold text-gray-800">คำนวณงาน</h1>
-                <button onclick="addJob()" class="bg-blue-600 text-white px-5 py-2 rounded-full text-lg shadow-md active:scale-95 transition-all">
-                    + เพิ่มงาน
-                </button>
-            </div>
-
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-100">
-                <label class="block text-gray-500 text-sm mb-1">ตั้งค่าตัวลบพาเลท (ปัจจุบัน)</label>
-                <div class="flex items-center gap-3">
-                    <input type="number" id="baseValue" oninput="updateAllCalculations()" 
-                        class="base-input w-full bg-blue-50 border-2 border-blue-200 rounded-xl p-2 text-center text-blue-700 font-bold focus:border-blue-500 outline-none" 
-                        value="90">
-                    <span class="text-gray-400">ถุง</span>
-                </div>
-                <p class="text-xs text-gray-400 mt-2">* เปลี่ยนเลขนี้เพื่อเปลี่ยนค่าคำนวณ (B - X)</p>
-            </div>
-        </header>
-
-        <div id="jobList" class="space-y-6">
-            </div>
-    </div>
-
-    <div class="fixed bottom-6 right-6">
-        <button onclick="addJob()" class="bg-blue-600 text-white w-16 h-16 rounded-full shadow-xl flex items-center justify-center text-3xl active:scale-90 transition-all">
-            +
-        </button>
-    </div>
-
-    <script>
-        let jobCount = 0;
-
-        function addJob() {
-            jobCount++;
-            const jobList = document.getElementById('jobList');
-            const card = document.createElement('div');
-            card.id = `job-card-${jobCount}`;
-            card.className = "job-card bg-white rounded-2xl shadow-sm border border-gray-200 p-5 relative animate-in fade-in zoom-in duration-300";
-            
-            card.innerHTML = `
-                <div class="flex justify-between items-center mb-4">
-                    <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-sm font-medium">งานที่ ${jobCount}</span>
-                    <button onclick="removeJob(${jobCount})" class="text-red-400 p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-gray-500 text-sm mb-1 text-center">ค่า A</label>
-                        <input type="number" oninput="calculateCard(this.closest('.job-card'))" 
-                            class="valA w-full bg-gray-50 border-2 border-gray-100 rounded-xl p-3 text-center focus:border-blue-400 outline-none transition-all" 
-                            placeholder="0">
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 text-sm mb-1 text-center">ค่า B</label>
-                        <input type="number" oninput="calculateCard(this.closest('.job-card'))" 
-                            class="valB w-full bg-gray-50 border-2 border-gray-100 rounded-xl p-3 text-center focus:border-blue-400 outline-none transition-all" 
-                            placeholder="0">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 border-t pt-4">
-                    <div class="text-center">
-                        <p class="text-xs text-gray-400 uppercase">คำตอบถุง (B-A)</p>
-                        <p class="ans1 text-3xl font-bold text-blue-600 leading-tight">0</p>
-                    </div>
-                    <div class="text-center border-l border-gray-100">
-                        <p class="text-xs text-gray-400 uppercase">คำตอบพาเลท (B-<span class="base-label">90</span>)</p>
-                        <p class="ans2 text-3xl font-bold text-indigo-600 leading-tight">0</p>
-                    </div>
-                </div>
-            `;
-            jobList.prepend(card);
-            updateAllCalculations(); // เพื่อให้อัปเดตตัวเลข Label ทันทีที่เพิ่มงาน
+        * {
+            font-family: 'Kanit', sans-serif;
         }
 
-        function removeJob(id) {
-            if(confirm('ลบรายการนี้?')) {
-                document.getElementById(`job-card-${id}`).remove();
+        body {
+            background: linear-gradient(145deg, #eef7e8 0%, #e2f0da 100%);
+            min-height: 100vh;
+            padding-bottom: 5rem;
+            margin: 0;
+        }
+
+        /* การ์ดนุ่มนวล มินิมอล */
+        .job-card {
+            background: #ffffffdd;
+            backdrop-filter: blur(2px);
+            background: #ffffff;
+            border-radius: 28px;
+            border: 1px solid rgba(80, 140, 70, 0.2);
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 28px -12px rgba(70, 120, 50, 0.2);
+            border-color: #a0d18c;
+        }
+
+        /* กำหนดสีเขียวอ่อนมินิมอล */
+        .bg-soft-mint {
+            background-color: #eef5e9;
+        }
+
+        .text-green-soft {
+            color: #2f6b2f;
+        }
+
+        .border-green-soft {
+            border-color: #bddbaf;
+        }
+
+        .btn-soft-green {
+            background-color: #4c8b3c;
+            border: none;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .btn-soft-green:hover {
+            background-color: #3b6e2e;
+            transform: scale(0.97);
+            box-shadow: 0 5px 12px rgba(60, 110, 40, 0.2);
+        }
+
+        .btn-outline-green-soft {
+            border: 1.5px solid #7fae6b;
+            color: #2d5a2a;
+            background: white;
+        }
+
+        .btn-outline-green-soft:hover {
+            background-color: #e1f3da;
+            border-color: #568c42;
+        }
+
+        .base-input-card {
+            background-color: #f8fff4;
+            border: 1.5px solid #cde2c2;
+            border-radius: 24px;
+            transition: all 0.2s;
+        }
+
+        .base-input-card:focus-within {
+            border-color: #6f9e5c;
+            box-shadow: 0 0 0 3px rgba(100, 160, 70, 0.2);
+        }
+
+        .result-badge {
+            background: #f2faeef0;
+            border-radius: 32px;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .floating-add {
+            width: 64px;
+            height: 64px;
+            font-size: 2rem;
+            border-radius: 64px;
+            background-color: #4c8b3c;
+            color: white;
+            border: none;
+            box-shadow: 0 8px 18px rgba(70, 110, 40, 0.35);
+            transition: 0.15s linear;
+        }
+
+        .floating-add:hover {
+            background-color: #326b24;
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        input.form-control-lg-custom {
+            font-size: 1.35rem;
+            font-weight: 500;
+            text-align: center;
+            border-radius: 20px;
+            border: 1.5px solid #cfe2c5;
+            background: #ffffff;
+        }
+
+        input.form-control-lg-custom:focus {
+            border-color: #6c9e58;
+            box-shadow: 0 0 0 3px rgba(108, 158, 88, 0.2);
+        }
+
+        .job-number {
+            background-color: #eaf5e4;
+            border-radius: 60px;
+            padding: 0.2rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #3c6e2c;
+        }
+
+        .delete-icon {
+            cursor: pointer;
+            transition: 0.1s;
+            color: #b0c49e;
+        }
+
+        .delete-icon:hover {
+            color: #cf5a5a;
+            transform: scale(1.05);
+        }
+
+        .answer-number {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #3a7744;
+        }
+
+        .ans-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            color: #6f8f63;
+        }
+
+        hr {
+            background-color: #cfdec5;
+            opacity: 0.6;
+        }
+
+        .badge-base {
+            background: #dbefd2;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+
+        /* =========  FOOTER ENHANCED STYLES ========= */
+        .footer-enhanced {
+            background: rgba(255, 255, 240, 0.92);
+            backdrop-filter: blur(4px);
+            border-top: 2px solid #d4e8ca;
+            border-radius: 28px 28px 0 0;
+            transition: all 0.2s;
+        }
+
+        .footer-enhanced a {
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .footer-enhanced a:hover {
+            color: #2f6b2f !important;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .badge-version {
+            background: #eaf5e4;
+            color: #2a5c24;
+            font-weight: 500;
+            border: 1px solid #c2dcb2;
+        }
+
+        /* =========  SPLASH SCREEN STYLES ========= */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #eef7e8 0%, #e2f0da 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .splash-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        .splash-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c5e2a;
+            margin-bottom: 8px;
+        }
+
+        .splash-sub {
+            font-size: 0.9rem;
+            color: #6c9e5c;
+            letter-spacing: 1px;
+        }
+
+        .spinner-wave {
+            display: flex;
+            gap: 5px;
+            margin-top: 30px;
+        }
+
+        .spinner-wave span {
+            width: 8px;
+            height: 8px;
+            background-color: #4c8b3c;
+            border-radius: 50%;
+            display: inline-block;
+            animation: wave 1s infinite ease-in-out both;
+        }
+
+        .spinner-wave span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .spinner-wave span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: scale(1);
+                opacity: 1;
             }
         }
 
-        // ฟังก์ชันคำนวณแยกแต่ละใบ
-        function calculateCard(card) {
-            const a = parseFloat(card.querySelector('.valA').value) || 0;
-            const b = parseFloat(card.querySelector('.valB').value) || 0;
-            const base = parseFloat(document.getElementById('baseValue').value) || 0;
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
 
-            const res1 = b - a;
-            const res2 = b - base;
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
 
-            card.querySelector('.ans1').innerText = res1.toLocaleString();
-            card.querySelector('.ans2').innerText = res2.toLocaleString();
-            card.querySelector('.base-label').innerText = base;
+            100% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
         }
 
-        // ฟังก์ชันอัปเดตทุกใบเมื่อมีการเปลี่ยนค่า Base (90)
+        /* Scroll Progress Bar */
+        #progressBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background-color: #dcc42a;
+            z-index: 9999;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+
+<body class="pt-4 pb-5">
+    <!-- Scroll Progress Bar -->
+    <div id="progressBar"></div>
+
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="splash-screen">
+        <img src="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
+            alt="ถุงพลัส" class="splash-logo">
+        <div class="splash-title">ถุงพลัส</div>
+        <div class="splash-sub">PalletPro</div>
+        <div class="spinner-wave">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <div class="container px-3 px-md-4" style="max-width: 640px;">
+        <!-- หัวข้อ + สไตล์มินิมอล -->
+        <div class="d-flex justify-content-between align-items-center mb-4 mt-2" data-aos="fade-down"
+            data-aos-duration="600">
+            <div>
+                <h1 class="display-6 fw-semibold" style="color: #2c5e2a;">
+                    <i class="bi bi-bag-check-fill me-2" style="color: #538e3c;"></i> ถุงพลัส
+                </h1>
+                <p class="text-muted small mt-1 mb-0">PalletPro คำนวณงานแบบเร็ว · เรียบง่าย</p>
+            </div>
+            <button onclick="addJobWithToast()" class="btn btn-soft-green rounded-pill px-4 py-2 shadow-sm">
+                <i class="bi bi-plus-circle me-1"></i> เพิ่มงาน
+            </button>
+        </div>
+
+        <!-- การตั้งค่าตัวแปรหลัก (ตัวลบพาเลท) -->
+        <div class="mb-4" data-aos="fade-up" data-aos-duration="600" data-aos-delay="80">
+            <div class="base-input-card p-3 p-md-4 bg-white shadow-sm">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-sliders2 fs-5 text-success-emphasis"></i>
+                        <label class="fw-semibold mb-0 text-dark-emphasis">ค่าตัวลบพาเลท (X)</label>
+                        <span class="badge-base ms-1"><i class="bi bi-calculator-fill me-1"></i> ค่าเริ่มต้น 90</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 bg-soft-mint px-3 py-1 rounded-4">
+                        <input type="number" id="baseValue" oninput="updateAllCalculations()"
+                            class="form-control form-control-sm text-center fw-bold border-0 bg-transparent"
+                            style="width: 95px; font-size: 1.4rem; outline: none;" value="90" step="1">
+                        <span class="fw-semibold text-secondary">พาเลท</span>
+                    </div>
+                </div>
+                <div class="small text-secondary mt-2 d-flex gap-2 align-items-center">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <span>ผลลัพธ์ B - X = จำนวนพาเลทสุทธิ (ปรับค่า X ได้ทันที)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- รายการงานทั้งหมด จะถูกเพิ่มเข้ามาในนี้ -->
+        <div id="jobList" class="d-flex flex-column gap-3">
+            <!-- งานจะแสดงแบบ dynamic ผ่าน JS -->
+        </div>
+
+        <!-- =========  ENHANCED FOOTER (FIXED & IMPROVED) ========= -->
+        <footer class="footer-enhanced mt-4 pt-3 pb-2 px-3 px-md-4 shadow-sm">
+            <div class="row align-items-center g-3">
+                <!-- ด้านซ้าย: ลิขสิทธิ์และข้อมูลผู้พัฒนา -->
+                <div class="col-md-6 text-center text-md-start">
+                    <div class="small text-secondary">
+                        <i class="bi bi-c-circle me-1"></i>
+                        <span id="currentYear"></span>
+                        <a href="https://sumettampornsak.vercel.app" target="_blank"
+                            class="text-green-soft fw-semibold text-decoration-none mx-1">
+                            Sumett Ampornsak
+                        </a>
+                        <span class="mx-1 d-none d-md-inline">•</span>
+                        <span class="d-block d-md-inline">All rights reserved.</span>
+                    </div>
+                </div>
+                <!-- ด้านขวา: เวอร์ชัน และข้อมูลเพิ่มเติม -->
+                <div class="col-md-6 text-center text-md-end">
+                    <span
+                        class="badge-version badge rounded-pill d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2">
+                        <i class="bi bi-tag-fill"></i> เวอร์ชัน: 4.5.0
+                    </span>
+                </div>
+                <!-- บรรทัดที่ 2: คำอธิบายเพิ่มเติม (อยู่เต็มความกว้าง) -->
+                <div class="col-12 mt-2">
+                    <div class="text-center opacity-75 small" style="font-size: 0.7rem;">
+                        <i class="bi bi-dot"></i> Last Updated: 25 มีนาคม 2569 <i class="bi bi-dot"></i>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- =========  END FOOTER ========= -->
+    </div>
+    <!-- end container -->
+
+    <!-- Floating Action Button -->
+    <div class="position-fixed bottom-0 end-0 p-3 z-3" style="bottom: 20px; right: 16px;">
+        <button onclick="addJobWithToast()"
+            class="floating-add d-flex align-items-center justify-content-center shadow-lg border-0">
+            <i class="bi bi-plus-lg fs-1 fw-bold"></i>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // ---------- INIT AOS (will init after splash hidden) ----------
+        let aosInitialized = false;
+        function initAOS() {
+            if (!aosInitialized) {
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                    offset: 10,
+                    easing: 'ease-out-sine'
+                });
+                aosInitialized = true;
+            }
+        }
+
+        // ---------- Splash Screen Handler ----------
+        function hideSplash() {
+            const splash = document.getElementById('splashScreen');
+            if (splash) {
+                splash.classList.add('hide');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 500);
+            }
+            initAOS();
+        }
+
+        let isPageLoaded = false;
+        let splashTimer = null;
+
+        window.addEventListener('load', () => {
+            isPageLoaded = true;
+            if (splashTimer) clearTimeout(splashTimer);
+            setTimeout(() => {
+                if (isPageLoaded) hideSplash();
+            }, 300);
+        });
+
+        splashTimer = setTimeout(() => {
+            if (!isPageLoaded) {
+                hideSplash();
+            }
+        }, 2500);
+
+        let jobCount = 0;
+
+        function calculateCard(card) {
+            const aInput = card.querySelector('.valA');
+            const bInput = card.querySelector('.valB');
+            const ans1Span = card.querySelector('.ans1');
+            const ans2Span = card.querySelector('.ans2');
+            const baseLabelSpan = card.querySelector('.base-label');
+
+            if (!aInput || !bInput || !ans1Span || !ans2Span || !baseLabelSpan) return;
+
+            const a = parseFloat(aInput.value) || 0;
+            const b = parseFloat(bInput.value) || 0;
+            const base = parseFloat(document.getElementById('baseValue').value) || 0;
+
+            const resultBag = b - a;
+            const resultPallet = b - base;
+
+            ans1Span.innerText = resultBag.toLocaleString();
+            ans2Span.innerText = resultPallet.toLocaleString();
+            baseLabelSpan.innerText = base;
+        }
+
         function updateAllCalculations() {
-            const cards = document.querySelectorAll('.job-card');
-            cards.forEach(card => {
-                calculateCard(card);
+            const allCards = document.querySelectorAll('.job-card');
+            allCards.forEach(card => calculateCard(card));
+        }
+
+        function addJobWithToast() {
+            addJob();
+            Swal.fire({
+                icon: 'success',
+                title: 'เพิ่มงานสำเร็จ',
+                text: 'กรอกค่าเพื่อดูผลลัพธ์ทันที',
+                toast: true,
+                timer: 1800,
+                showConfirmButton: false,
+                background: '#ffffff',
+                iconColor: '#4c8b3c',
+                position: 'top-end'
             });
         }
 
-        // เริ่มต้นงานแรก
-        addJob();
+        function addJob() {
+            jobCount++;
+            const jobListDiv = document.getElementById('jobList');
+            const newCard = document.createElement('div');
+            newCard.id = `job-card-${jobCount}`;
+            newCard.className = "job-card p-4 p-md-4 position-relative";
+            newCard.setAttribute('data-aos', 'fade-up');
+            newCard.setAttribute('data-aos-duration', '450');
+
+            newCard.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="job-number d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-briefcase-fill"></i> งานที่ ${jobCount}
+                    </div>
+                    <div class="delete-icon" onclick="confirmRemoveJob(${jobCount})" title="ลบงาน">
+                        <i class="bi bi-trash3 fs-5"></i>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold mb-1 text-secondary" style="font-size: 2.1rem;"><i class="bi bi-arrow-return-left me-1"></i> ค่า A</label>
+                        <input type="number" oninput="calculateCard(this.closest('.job-card'))" 
+                               class="valA form-control form-control-lg-custom py-2 px-3 text-center" 
+                               placeholder="0" value="" step="1">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold mb-1 text-secondary" style="font-size: 2.1rem;"><i class="bi bi-arrow-return-right me-1"></i> ค่า B</label>
+                        <input type="number" oninput="calculateCard(this.closest('.job-card'))" 
+                               class="valB form-control form-control-lg-custom py-2 px-3 text-center" 
+                               placeholder="0" value="" step="1">
+                    </div>
+                </div>
+                
+                <div class="row g-2 text-center pt-2 border-top" style="border-top: 1px dashed #cfe2c5 !important;">
+                    <div class="col-6">
+                        <div class="result-badge p-2">
+                            <div class="ans-label text-uppercase small fw-semibold">
+                                <i class="bi bi-box-seam"></i> ถุงสุทธิ (B-A)
+                            </div>
+                            <div class="answer-number ans1 fw-bold" style="font-size: 3.1rem;">0</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="result-badge p-2">
+                            <div class="ans-label text-uppercase small fw-semibold">
+                                <i class="bi bi-palette"></i> พาเลทสุทธิ (B-<span class="base-label fw-bold">90</span>)
+                            </div>
+                            <div class="answer-number ans2 fw-bold" style="font-size: 3.1rem;">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-end mt-2 opacity-50 small">
+                    <i class="bi bi-calculator"></i> คำนวนอัตโนมัติ
+                </div>
+            `;
+
+            if (jobListDiv.firstChild) {
+                jobListDiv.insertBefore(newCard, jobListDiv.firstChild);
+            } else {
+                jobListDiv.appendChild(newCard);
+            }
+
+            const baseCurrent = parseFloat(document.getElementById('baseValue').value) || 0;
+            const baseLabelSpan = newCard.querySelector('.base-label');
+            if (baseLabelSpan) baseLabelSpan.innerText = baseCurrent;
+            calculateCard(newCard);
+
+            if (aosInitialized) AOS.refresh();
+        }
+
+        function confirmRemoveJob(jobId) {
+            Swal.fire({
+                title: 'ต้องการลบงานนี้?',
+                text: 'คุณจะไม่สามารถกู้คืนข้อมูลที่คำนวณไว้ได้',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#4c8b3c',
+                cancelButtonColor: '#b0b9a8',
+                confirmButtonText: 'ใช่, ลบเลย',
+                cancelButtonText: 'ยกเลิก',
+                background: '#ffffff',
+                backdrop: `rgba(70, 90, 50, 0.1)`,
+                customClass: {
+                    popup: 'rounded-4 shadow-lg border-0'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const targetCard = document.getElementById(`job-card-${jobId}`);
+                    if (targetCard) {
+                        targetCard.remove();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ลบสำเร็จ',
+                            toast: true,
+                            timer: 1300,
+                            showConfirmButton: false,
+                            background: '#f6fff0',
+                            iconColor: '#4c8b3c',
+                            position: 'top-end'
+                        });
+                        if (aosInitialized) AOS.refresh();
+                    } else {
+                        Swal.fire('ไม่พบรายการ', 'งานนี้ถูกลบไปแล้ว', 'info');
+                    }
+                }
+            });
+        }
+
+        window.confirmRemoveJob = confirmRemoveJob;
+        window.addJobWithToast = addJobWithToast;
+        window.calculateCard = calculateCard;
+        window.updateAllCalculations = updateAllCalculations;
+        window.addJob = addJob;
+
+        const baseInput = document.getElementById('baseValue');
+        if (baseInput) {
+            baseInput.addEventListener('input', function () {
+                updateAllCalculations();
+            });
+        }
+
+        function setCurrentYear() {
+            const yearSpan = document.getElementById('currentYear');
+            if (yearSpan) yearSpan.innerText = new Date().getFullYear();
+        }
+
+        // =============== PWA MANIFEST & SERVICE WORKER (with custom logo URL) ===============
+        (function setupPWA() {
+            const iconUrl = "https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png";
+
+            const manifestObj = {
+                name: "ถุงพลัส",
+                short_name: "ถุงพลัส",
+                description: "คำนวณถุงและพาเลทอย่างรวดเร็ว",
+                start_url: ".",
+                display: "standalone",
+                theme_color: "#4c8b3c",
+                background_color: "#eef7e8",
+                icons: [
+                    { src: iconUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
+                    { src: iconUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
+                ]
+            };
+            const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: "application/json" });
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = manifestURL;
+            document.head.appendChild(manifestLink);
+
+            const swCode = `
+                const CACHE_NAME = 'thungplus-palletpro-v7';
+                const urlsToCache = [
+                    '/',
+                    location.pathname,
+                    '${manifestURL}',
+                    '${iconUrl}',
+                    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css',
+                    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
+                    'https://unpkg.com/aos@2.3.1/dist/aos.css',
+                    'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap',
+                    'https://cdn.jsdelivr.net/npm/sweetalert2@11',
+                    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js',
+                    'https://unpkg.com/aos@2.3.1/dist/aos.js'
+                ];
+                
+                self.addEventListener('install', event => {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME).then(cache => {
+                            return cache.addAll(urlsToCache.map(url => new Request(url, {credentials: 'omit'})));
+                        }).catch(err => console.warn('Cache failed', err))
+                    );
+                    self.skipWaiting();
+                });
+                
+                self.addEventListener('fetch', event => {
+                    event.respondWith(
+                        caches.match(event.request).then(response => {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+                
+                self.addEventListener('activate', event => {
+                    event.waitUntil(clients.claim());
+                });
+            `;
+            const swBlob = new Blob([swCode], { type: "application/javascript" });
+            const swURL = URL.createObjectURL(swBlob);
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register(swURL).then(reg => {
+                    console.log('SW registered for ถุงพลัส:', reg);
+                }).catch(err => console.error('SW registration failed:', err));
+            }
+
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                const banner = document.getElementById('installBanner');
+                if (banner) banner.classList.add('show');
+            });
+
+            const installBtn = document.getElementById('installAppBtn');
+            const closeBanner = document.getElementById('closeInstallBanner');
+            if (installBtn) {
+                installBtn.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            console.log('User accepted install');
+                        }
+                        deferredPrompt = null;
+                    }
+                    document.getElementById('installBanner')?.classList.remove('show');
+                });
+            }
+            if (closeBanner) {
+                closeBanner.addEventListener('click', () => {
+                    document.getElementById('installBanner')?.classList.remove('show');
+                });
+            }
+        })();
+
+        function initFirstJob() {
+            addJob();
+            updateAllCalculations();
+            setCurrentYear();
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            initFirstJob();
+            const baseValElem = document.getElementById('baseValue');
+            if (baseValElem) baseValElem.dispatchEvent(new Event('input'));
+        });
+
+        const progressBar = document.getElementById('progressBar');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
     </script>
 </body>
+
 </html>
