@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ถุงพลัส · PalletPro</title>
-    <meta name="description" content="ถุงพลัส PalletPro เว็บแอพคำนวนถุงและพาเลท" />
-    <meta name="keywords" content="ถุงพลัส, PalletPro,เว็บแอพคำนวนถุง,เว็บแอพคำนวนพาเลท" />
+    <title>ถุงพลัส · PalletPro · บันทึกการทำงาน</title>
+    <meta name="description" content="ถุงพลัส PalletPro เว็บแอพคำนวนถุงและพาเลท พร้อมระบบบันทึกประวัติการทำงาน" />
+    <meta name="keywords" content="ถุงพลัส, PalletPro,log,บันทึกการทำงาน,คำนวนถุง,คำนวนพาเลท" />
     <meta name="author" content="Sumett Ampornsak" />
     <link rel="icon"
         href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
@@ -194,6 +194,65 @@
             font-size: 0.8rem;
         }
 
+        /* =========  LOG SECTION STYLES ========= */
+        .log-card {
+            background: #fefef7;
+            border-radius: 28px;
+            border: 1px solid #cde0c0;
+            transition: all 0.2s;
+        }
+
+        .log-container {
+            max-height: 260px;
+            overflow-y: auto;
+            background: #fffff5;
+            border-radius: 20px;
+            padding: 0.25rem;
+        }
+
+        .log-item {
+            font-size: 0.8rem;
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid #e2edda;
+            transition: 0.1s;
+            font-family: 'Kanit', monospace;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            font-weight: 600;
+            color: #568c42;
+            background: #eef5ea;
+            border-radius: 40px;
+            padding: 0.1rem 0.6rem;
+            display: inline-block;
+            font-size: 0.7rem;
+        }
+
+        .log-message {
+            word-break: break-word;
+            color: #2c3a24;
+        }
+
+        .btn-clear-log {
+            background: transparent;
+            border: 1px solid #cbdcc0;
+            color: #5a7c4a;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-clear-log:hover {
+            background: #e9f3e3;
+            border-color: #8fb573;
+            color: #2f5a24;
+        }
+
         /* =========  FOOTER ENHANCED STYLES ========= */
         .footer-enhanced {
             background: rgba(255, 255, 240, 0.92);
@@ -342,7 +401,7 @@
         <img src="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
             alt="ถุงพลัส" class="splash-logo">
         <div class="splash-title">ถุงพลัส</div>
-        <div class="splash-sub">PalletPro</div>
+        <div class="splash-sub">PalletPro · พร้อมบันทึกการทำงาน</div>
         <div class="spinner-wave">
             <span></span><span></span><span></span>
         </div>
@@ -356,7 +415,7 @@
                 <h1 class="display-6 fw-semibold" style="color: #2c5e2a;">
                     <i class="bi bi-bag-check-fill me-2" style="color: #538e3c;"></i> ถุงพลัส
                 </h1>
-                <p class="text-muted small mt-1 mb-0">PalletPro คำนวณงานแบบเร็ว · เรียบง่าย</p>
+                <p class="text-muted small mt-1 mb-0">PalletPro คำนวณงานแบบเร็ว · พร้อมประวัติการทำงาน</p>
             </div>
             <button onclick="addJobWithToast()" class="btn btn-soft-green rounded-pill px-4 py-2 shadow-sm">
                 <i class="bi bi-plus-circle me-1"></i> เพิ่มงาน
@@ -373,7 +432,7 @@
                         <span class="badge-base ms-1"><i class="bi bi-calculator-fill me-1"></i> ค่าเริ่มต้น 90</span>
                     </div>
                     <div class="d-flex align-items-center gap-2 bg-soft-mint px-3 py-1 rounded-4">
-                        <input type="number" id="baseValue" oninput="updateAllCalculations()"
+                        <input type="number" id="baseValue"
                             class="form-control form-control-sm text-center fw-bold border-0 bg-transparent"
                             style="width: 95px; font-size: 1.4rem; outline: none;" value="90" step="1">
                         <span class="fw-semibold text-secondary">พาเลท</span>
@@ -391,10 +450,29 @@
             <!-- งานจะแสดงแบบ dynamic ผ่าน JS -->
         </div>
 
+        <!-- =========  NEW ACTIVITY LOG SECTION ========= -->
+        <div class="mt-4" data-aos="fade-up" data-aos-duration="500">
+            <div class="log-card p-3 p-md-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-clock-history fs-5 text-success"></i>
+                        <h5 class="fw-semibold mb-0"> Logs บันทึกการทำงาน</h5>
+                        <span id="logCountBadge" class="badge bg-secondary-subtle text-dark rounded-pill">0</span>
+                    </div>
+                    <button id="clearLogBtn" class="btn-clear-log"><i class="bi bi-trash3 me-1"></i> ล้าง logs ทั้งหมด</button>
+                </div>
+                <div class="log-container" id="logContainer">
+                    <div class="text-center text-muted small py-3">ยังไม่มีบันทึกการทำงาน</div>
+                </div>
+                <div class="small text-secondary mt-2 text-center opacity-50">
+                    <i class="bi bi-info-circle"></i> บันทึกการกรอกค่า A/B, ผลลัพธ์, เพิ่ม/ลบงาน, เปลี่ยนค่าตัวลบ
+                </div>
+            </div>
+        </div>
+
         <!-- =========  ENHANCED FOOTER (FIXED & IMPROVED) ========= -->
         <footer class="footer-enhanced mt-4 pt-3 pb-2 px-3 px-md-4 shadow-sm">
             <div class="row align-items-center g-3">
-                <!-- ด้านซ้าย: ลิขสิทธิ์และข้อมูลผู้พัฒนา -->
                 <div class="col-md-6 text-center text-md-start">
                     <div class="small text-secondary">
                         <i class="bi bi-c-circle me-1"></i>
@@ -407,17 +485,15 @@
                         <span class="d-block d-md-inline">All rights reserved.</span>
                     </div>
                 </div>
-                <!-- ด้านขวา: เวอร์ชัน และข้อมูลเพิ่มเติม -->
                 <div class="col-md-6 text-center text-md-end">
                     <span
                         class="badge-version badge rounded-pill d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2">
-                        <i class="bi bi-tag-fill"></i> เวอร์ชัน: 4.5.0
+                        <i class="bi bi-tag-fill"></i> เวอร์ชัน: 5.0.0
                     </span>
                 </div>
-                <!-- บรรทัดที่ 2: คำอธิบายเพิ่มเติม (อยู่เต็มความกว้าง) -->
                 <div class="col-12 mt-2">
                     <div class="text-center opacity-75 small" style="font-size: 0.7rem;">
-                        <i class="bi bi-dot"></i> Last Updated: 25 มีนาคม 2569 <i class="bi bi-dot"></i>
+                        <i class="bi bi-dot"></i> Last Updated: 24 เมษายน 2569 <i class="bi bi-dot"></i>
                     </div>
                 </div>
             </div>
@@ -437,7 +513,100 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // ---------- INIT AOS (will init after splash hidden) ----------
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data.type === 'LOGS_RESULT') {
+                activityLogs = event.data.payload || [];
+                renderLogs();
+            }
+        });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw-log.js')
+                .then(() => console.log('Service Worker พร้อมใช้งาน!!'))
+                .catch(err => console.error('Service Worker ไม่พร้อมใช้งาน!!:', err));
+        }
+        // ---------- LOGGING SYSTEM --------------
+        let activityLogs = [];     // array of { timestamp, message }
+        const MAX_LOG_ENTRIES = 150;
+
+        function formatTimestamp() {
+            const now = new Date();
+            return now.toLocaleString('th-TH', { hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        // เพิ่มบันทึกใหม่ (message)
+        function addLogEntry(message) {
+            const timestamp = formatTimestamp();
+            const log = { timestamp, message };
+
+            activityLogs.unshift(log);
+            if (activityLogs.length > MAX_LOG_ENTRIES) activityLogs.pop();
+
+            renderLogs();
+
+            // ส่งไปเก็บถาวร
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'ADD_LOG',
+                    payload: log
+                });
+            }
+        }
+
+        // ล้าง log ทั้งหมด
+        function clearAllLogs() {
+            activityLogs = [];
+            renderLogs();
+
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'CLEAR_LOGS'
+                });
+            }
+
+            Swal.fire({
+                icon: 'info',
+                title: 'ล้างประวัติเรียบร้อย',
+                toast: true,
+                timer: 1200,
+                showConfirmButton: false,
+                position: 'top-end'
+            });
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logContainer');
+            const badge = document.getElementById('logCountBadge');
+            if (!container) return;
+            if (activityLogs.length === 0) {
+                container.innerHTML = `<div class="text-center text-muted small py-3">ยังไม่มีการบันทึก...</div>`;
+                if (badge) badge.innerText = '0';
+                return;
+            }
+            if (badge) badge.innerText = activityLogs.length;
+            const logsHtml = activityLogs.map(log => `
+                <div class="log-item">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                        <span class="log-time"><i class="bi bi-stopwatch me-1"></i>${log.timestamp}</span>
+                    </div>
+                    <div class="log-message mt-1">${escapeHtml(log.message)}</div>
+                </div>
+            `).join('');
+            container.innerHTML = logsHtml;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function (m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
+                return c;
+            });
+        }
+
+        // ---------- AOS INIT ----------
         let aosInitialized = false;
         function initAOS() {
             if (!aosInitialized) {
@@ -451,7 +620,7 @@
             }
         }
 
-        // ---------- Splash Screen Handler ----------
+        // Splash
         function hideSplash() {
             const splash = document.getElementById('splashScreen');
             if (splash) {
@@ -465,7 +634,6 @@
 
         let isPageLoaded = false;
         let splashTimer = null;
-
         window.addEventListener('load', () => {
             isPageLoaded = true;
             if (splashTimer) clearTimeout(splashTimer);
@@ -473,22 +641,19 @@
                 if (isPageLoaded) hideSplash();
             }, 300);
         });
-
         splashTimer = setTimeout(() => {
-            if (!isPageLoaded) {
-                hideSplash();
-            }
+            if (!isPageLoaded) hideSplash();
         }, 2500);
 
         let jobCount = 0;
 
-        function calculateCard(card) {
+        // คำนวณการ์ดเดียว (เพิ่มพารามิเตอร์ skipLog เพื่อควบคุมการบันทึก)
+        function calculateCard(card, skipLog = false) {
             const aInput = card.querySelector('.valA');
             const bInput = card.querySelector('.valB');
             const ans1Span = card.querySelector('.ans1');
             const ans2Span = card.querySelector('.ans2');
             const baseLabelSpan = card.querySelector('.base-label');
-
             if (!aInput || !bInput || !ans1Span || !ans2Span || !baseLabelSpan) return;
 
             const a = parseFloat(aInput.value) || 0;
@@ -501,19 +666,29 @@
             ans1Span.innerText = resultBag.toLocaleString();
             ans2Span.innerText = resultPallet.toLocaleString();
             baseLabelSpan.innerText = base;
+
+            // บันทึก log เฉพาะเมื่อไม่ได้ skip และมี card (กรอกค่าโดยผู้ใช้)
+            if (!skipLog) {
+                const jobId = card.dataset.jobId || '?';
+                // ข้อความแสดงการกรอกและผลลัพธ์
+                const msg = `งานที่ ${jobId} : A = ${a}, B = ${b}  →  ถุงสุทธิ = ${resultBag} | พาเลทสุทธิ = ${resultPallet} (ตัวลบ X=${base})`;
+                addLogEntry(msg);
+            }
         }
 
-        function updateAllCalculations() {
+        // อัพเดทการคำนวณทั้งหมด (เมื่อ base เปลี่ยน หรือ init)
+        function updateAllCalculations(skipLog = true) {
             const allCards = document.querySelectorAll('.job-card');
-            allCards.forEach(card => calculateCard(card));
+            allCards.forEach(card => calculateCard(card, skipLog));
         }
 
+        // เพิ่มงานใหม่พร้อมบันทึก log
         function addJobWithToast() {
             addJob();
             Swal.fire({
                 icon: 'success',
                 title: 'เพิ่มงานสำเร็จ',
-                text: 'กรอกค่าเพื่อดูผลลัพธ์ทันที',
+                text: 'กรอกค่าเพื่อดูผลลัพธ์ และระบบจะบันทึกการทำงาน',
                 toast: true,
                 timer: 1800,
                 showConfirmButton: false,
@@ -531,6 +706,7 @@
             newCard.className = "job-card p-4 p-md-4 position-relative";
             newCard.setAttribute('data-aos', 'fade-up');
             newCard.setAttribute('data-aos-duration', '450');
+            newCard.dataset.jobId = jobCount;
 
             newCard.innerHTML = `
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -545,13 +721,13 @@
                 <div class="row g-3 mb-4">
                     <div class="col-6">
                         <label class="form-label fw-semibold mb-1 text-secondary" style="font-size: 2.1rem;"><i class="bi bi-arrow-return-left me-1"></i> ค่า A</label>
-                        <input type="number" oninput="calculateCard(this.closest('.job-card'))" 
+                        <input type="number" oninput="calculateCard(this.closest('.job-card'), false)" 
                                class="valA form-control form-control-lg-custom py-2 px-3 text-center" 
                                placeholder="0" value="" step="1">
                     </div>
                     <div class="col-6">
                         <label class="form-label fw-semibold mb-1 text-secondary" style="font-size: 2.1rem;"><i class="bi bi-arrow-return-right me-1"></i> ค่า B</label>
-                        <input type="number" oninput="calculateCard(this.closest('.job-card'))" 
+                        <input type="number" oninput="calculateCard(this.closest('.job-card'), false)" 
                                class="valB form-control form-control-lg-custom py-2 px-3 text-center" 
                                placeholder="0" value="" step="1">
                     </div>
@@ -587,18 +763,26 @@
                 jobListDiv.appendChild(newCard);
             }
 
-            const baseCurrent = parseFloat(document.getElementById('baseValue').value) || 0;
-            const baseLabelSpan = newCard.querySelector('.base-label');
-            if (baseLabelSpan) baseLabelSpan.innerText = baseCurrent;
-            calculateCard(newCard);
-
+            // คำนวณค่าเริ่มต้นโดยไม่บันทึก log (เพื่อแสดงผลแต่ไม่รบกวน log)
+            calculateCard(newCard, true);
+            // บันทึกการเพิ่มงาน (เริ่มรายการใหม่)
+            addLogEntry(`เพิ่มงานที่ : ${jobCount} (รอการกรอกข้อมูล)`);
             if (aosInitialized) AOS.refresh();
         }
 
+        // ลบงานพร้อมบันทึก log
         function confirmRemoveJob(jobId) {
+            const targetCard = document.getElementById(`job-card-${jobId}`);
+            if (!targetCard) {
+                Swal.fire('ไม่พบรายการ', 'งานนี้ถูกลบไปแล้ว', 'info');
+                return;
+            }
+            // ดึงข้อมูล A,B สุดท้ายเพื่อ log
+            const aVal = targetCard.querySelector('.valA')?.value || '?';
+            const bVal = targetCard.querySelector('.valB')?.value || '?';
             Swal.fire({
                 title: 'ต้องการลบงานนี้?',
-                text: 'คุณจะไม่สามารถกู้คืนข้อมูลที่คำนวณไว้ได้',
+                text: `งานที่ ${jobId} (A=${aVal}, B=${bVal}) จะถูกลบ`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#4c8b3c',
@@ -607,58 +791,85 @@
                 cancelButtonText: 'ยกเลิก',
                 background: '#ffffff',
                 backdrop: `rgba(70, 90, 50, 0.1)`,
-                customClass: {
-                    popup: 'rounded-4 shadow-lg border-0'
-                }
+                customClass: { popup: 'rounded-4 shadow-lg border-0' }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const targetCard = document.getElementById(`job-card-${jobId}`);
-                    if (targetCard) {
-                        targetCard.remove();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'ลบสำเร็จ',
-                            toast: true,
-                            timer: 1300,
-                            showConfirmButton: false,
-                            background: '#f6fff0',
-                            iconColor: '#4c8b3c',
-                            position: 'top-end'
-                        });
-                        if (aosInitialized) AOS.refresh();
-                    } else {
-                        Swal.fire('ไม่พบรายการ', 'งานนี้ถูกลบไปแล้ว', 'info');
-                    }
+                    addLogEntry(`ผู้ใช้ลบงานที่ : ${jobId}`);
+                    if (targetCard) targetCard.remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ลบสำเร็จ',
+                        toast: true,
+                        timer: 1300,
+                        showConfirmButton: false,
+                        background: '#f6fff0',
+                        iconColor: '#4c8b3c',
+                        position: 'top-end'
+                    });
+                    if (aosInitialized) AOS.refresh();
                 }
             });
         }
 
+        // ตัวแปร base value event
+        const baseInputElem = document.getElementById('baseValue');
+        if (baseInputElem) {
+            baseInputElem.addEventListener('input', function (e) {
+                const newBase = parseFloat(e.target.value) || 0;
+                addLogEntry(`ผู้ใช้เปลี่ยนค่าตัวลบพาเลท (X) เป็น : ${newBase}`);
+                updateAllCalculations(true);  // อัปเดตแต่ไม่บันทึก log ซ้ำ (เพราะเราบันทึกแค่เปลี่ยน base)
+            });
+        }
+
+        // ฟังก์ชันปี ค.ศ.
+        function setCurrentYear() {
+            const yearSpan = document.getElementById('currentYear');
+            if (yearSpan) yearSpan.innerText = new Date().getFullYear();
+        }
+
+        // ปุ่ม clear log
+        document.addEventListener('DOMContentLoaded', () => {
+
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'GET_LOGS'
+                });
+            }
+            const clearBtn = document.getElementById('clearLogBtn');
+            if (clearBtn) clearBtn.addEventListener('click', clearAllLogs);
+            // เพิ่มงานแรกเริ่มต้น
+            addJob();
+            // อัปเดตทุกอย่างโดยไม่บันทึก log (เฉพาะค่าเริ่มต้น)
+            updateAllCalculations(true);
+            setCurrentYear();
+
+            // เพิ่ม log เริ่มต้นระบบ
+            addLogEntry('ระบบถุงพลัส PalletPro เริ่มทำงาน');
+        });
+
+        // เปิดเผย global functions
         window.confirmRemoveJob = confirmRemoveJob;
         window.addJobWithToast = addJobWithToast;
         window.calculateCard = calculateCard;
         window.updateAllCalculations = updateAllCalculations;
         window.addJob = addJob;
 
-        const baseInput = document.getElementById('baseValue');
-        if (baseInput) {
-            baseInput.addEventListener('input', function () {
-                updateAllCalculations();
-            });
-        }
+        // Scroll progress bar
+        const progressBar = document.getElementById('progressBar');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
 
-        function setCurrentYear() {
-            const yearSpan = document.getElementById('currentYear');
-            if (yearSpan) yearSpan.innerText = new Date().getFullYear();
-        }
-
-        // =============== PWA MANIFEST & SERVICE WORKER (with custom logo URL) ===============
+        // =============== PWA MANIFEST & SERVICE WORKER (optional)  ===============
         (function setupPWA() {
             const iconUrl = "https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png";
-
             const manifestObj = {
                 name: "ถุงพลัส",
                 short_name: "ถุงพลัส",
-                description: "คำนวณถุงและพาเลทอย่างรวดเร็ว",
+                description: "คำนวณถุงและพาเลท พร้อมระบบบันทึกการทำงาน",
                 start_url: ".",
                 display: "standalone",
                 theme_color: "#4c8b3c",
@@ -674,101 +885,12 @@
             manifestLink.rel = 'manifest';
             manifestLink.href = manifestURL;
             document.head.appendChild(manifestLink);
-
-            const swCode = `
-                const CACHE_NAME = 'thungplus-palletpro-v7';
-                const urlsToCache = [
-                    '/',
-                    location.pathname,
-                    '${manifestURL}',
-                    '${iconUrl}',
-                    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css',
-                    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
-                    'https://unpkg.com/aos@2.3.1/dist/aos.css',
-                    'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap',
-                    'https://cdn.jsdelivr.net/npm/sweetalert2@11',
-                    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js',
-                    'https://unpkg.com/aos@2.3.1/dist/aos.js'
-                ];
-                
-                self.addEventListener('install', event => {
-                    event.waitUntil(
-                        caches.open(CACHE_NAME).then(cache => {
-                            return cache.addAll(urlsToCache.map(url => new Request(url, {credentials: 'omit'})));
-                        }).catch(err => console.warn('Cache failed', err))
-                    );
-                    self.skipWaiting();
-                });
-                
-                self.addEventListener('fetch', event => {
-                    event.respondWith(
-                        caches.match(event.request).then(response => {
-                            return response || fetch(event.request);
-                        })
-                    );
-                });
-                
-                self.addEventListener('activate', event => {
-                    event.waitUntil(clients.claim());
-                });
-            `;
-            const swBlob = new Blob([swCode], { type: "application/javascript" });
-            const swURL = URL.createObjectURL(swBlob);
-
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register(swURL).then(reg => {
-                    console.log('SW registered for ถุงพลัส:', reg);
-                }).catch(err => console.error('SW registration failed:', err));
-            }
-
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                const banner = document.getElementById('installBanner');
-                if (banner) banner.classList.add('show');
-            });
-
-            const installBtn = document.getElementById('installAppBtn');
-            const closeBanner = document.getElementById('closeInstallBanner');
-            if (installBtn) {
-                installBtn.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            console.log('User accepted install');
-                        }
-                        deferredPrompt = null;
-                    }
-                    document.getElementById('installBanner')?.classList.remove('show');
-                });
-            }
-            if (closeBanner) {
-                closeBanner.addEventListener('click', () => {
-                    document.getElementById('installBanner')?.classList.remove('show');
-                });
+                const swCode = `const CACHE_NAME='thungplus-palletpro-v7-log'; self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(['/'])))})`;
+                const swBlob = new Blob([swCode], { type: "application/javascript" });
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(e => console.log);
             }
         })();
-
-        function initFirstJob() {
-            addJob();
-            updateAllCalculations();
-            setCurrentYear();
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            initFirstJob();
-            const baseValElem = document.getElementById('baseValue');
-            if (baseValElem) baseValElem.dispatchEvent(new Event('input'));
-        });
-
-        const progressBar = document.getElementById('progressBar');
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + '%';
-        });
     </script>
 </body>
 
