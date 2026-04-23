@@ -1,0 +1,23 @@
+{
+  "name": "ถุงพลัส",
+  "short_name": "ถุงพลัส",
+  "description": "คำนวณถุงและพาเลท พร้อมระบบบันทึกการทำงาน",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#4c8b3c",
+  "background_color": "#eef7e8",
+  "icons": [
+    {
+      "src": "https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

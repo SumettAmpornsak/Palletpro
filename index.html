@@ -32,6 +32,8 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="manifest" href="/manifest.json">
+
     <style>
         * {
             font-family: 'Kanit', sans-serif;
@@ -520,10 +522,10 @@
             }
         });
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw-log.js')
-                .then(() => console.log('Service Worker พร้อมใช้งาน!!'))
-                .catch(err => console.error('Service Worker ไม่พร้อมใช้งาน!!:', err));
-        }
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg))
+    .catch(err => console.error('SW failed:', err));
+}
         // ---------- LOGGING SYSTEM --------------
         let activityLogs = [];     // array of { timestamp, message }
         const MAX_LOG_ENTRIES = 150;
@@ -862,35 +864,6 @@
             const scrolled = (winScroll / height) * 100;
             progressBar.style.width = scrolled + '%';
         });
-
-        // =============== PWA MANIFEST & SERVICE WORKER (optional)  ===============
-        (function setupPWA() {
-            const iconUrl = "https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png";
-            const manifestObj = {
-                name: "ถุงพลัส",
-                short_name: "ถุงพลัส",
-                description: "คำนวณถุงและพาเลท พร้อมระบบบันทึกการทำงาน",
-                start_url: ".",
-                display: "standalone",
-                theme_color: "#4c8b3c",
-                background_color: "#eef7e8",
-                icons: [
-                    { src: iconUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
-                    { src: iconUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
-                ]
-            };
-            const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: "application/json" });
-            const manifestURL = URL.createObjectURL(manifestBlob);
-            const manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
-            manifestLink.href = manifestURL;
-            document.head.appendChild(manifestLink);
-            if ('serviceWorker' in navigator) {
-                const swCode = `const CACHE_NAME='thungplus-palletpro-v7-log'; self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(['/'])))})`;
-                const swBlob = new Blob([swCode], { type: "application/javascript" });
-                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(e => console.log);
-            }
-        })();
     </script>
 </body>
 
