@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>ถุงพลัส · PalletPro · Firebase CRUD</title>
-    <meta name="description" content="ถุงพลัส PalletPro เว็บแอพคำนวณถุงและพาเลท พร้อมระบบบันทึกประวัติการทำงานบน Firebase" />
+    <meta name="description"
+        content="ถุงพลัส PalletPro เว็บแอพคำนวณถุงและพาเลท พร้อมระบบบันทึกประวัติการทำงานบน Firebase" />
     <meta name="author" content="Sumett Ampornsak" />
-    <link rel="icon" href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png" type="image/x-icon" />
+    <link rel="icon"
+        href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
+        type="image/x-icon" />
     <meta name="theme-color" content="#4c8b3c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ถุงพลัส">
-    <link rel="apple-touch-icon" href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png">
+    <link rel="apple-touch-icon"
+        href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -20,13 +25,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        * { font-family: 'Kanit', sans-serif; }
+        * {
+            font-family: 'Kanit', sans-serif;
+        }
+
         body {
             background: linear-gradient(145deg, #eef7e8 0%, #e2f0da 100%);
             min-height: 100vh;
             padding-bottom: 5rem;
             margin: 0;
         }
+
         .job-card {
             background: #ffffff;
             border-radius: 28px;
@@ -34,34 +43,46 @@
             transition: all 0.2s ease;
             box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.05);
         }
+
         .job-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 18px 28px -12px rgba(70, 120, 50, 0.2);
             border-color: #a0d18c;
         }
-        .bg-soft-mint { background-color: #eef5e9; }
-        .text-green-soft { color: #2f6b2f; }
+
+        .bg-soft-mint {
+            background-color: #eef5e9;
+        }
+
+        .text-green-soft {
+            color: #2f6b2f;
+        }
+
         .btn-soft-green {
             background-color: #4c8b3c;
             border: none;
             color: white;
             transition: all 0.2s;
         }
+
         .btn-soft-green:hover {
             background-color: #3b6e2e;
             transform: scale(0.97);
             box-shadow: 0 5px 12px rgba(60, 110, 40, 0.2);
         }
+
         .base-input-card {
             background-color: #f8fff4;
             border: 1.5px solid #cde2c2;
             border-radius: 24px;
         }
+
         .result-badge {
             background: #f2faeef0;
             border-radius: 32px;
             padding: 0.5rem 0.75rem;
         }
+
         .floating-add {
             width: 64px;
             height: 64px;
@@ -73,10 +94,12 @@
             box-shadow: 0 8px 18px rgba(70, 110, 40, 0.35);
             transition: 0.15s linear;
         }
+
         .floating-add:hover {
             background-color: #326b24;
             transform: scale(0.96);
         }
+
         input.form-control-lg-custom {
             font-size: 1.35rem;
             font-weight: 500;
@@ -84,10 +107,12 @@
             border-radius: 20px;
             border: 1.5px solid #cfe2c5;
         }
+
         input.form-control-lg-custom:focus {
             border-color: #6c9e58;
             box-shadow: 0 0 0 3px rgba(108, 158, 88, 0.2);
         }
+
         .job-number {
             background-color: #eaf5e4;
             border-radius: 60px;
@@ -96,38 +121,45 @@
             font-weight: 500;
             color: #3c6e2c;
         }
+
         .delete-icon {
             cursor: pointer;
             transition: 0.1s;
             color: #b0c49e;
         }
+
         .delete-icon:hover {
             color: #cf5a5a;
             transform: scale(1.05);
         }
+
         .answer-number {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.1rem;
+            font-weight: 600;
             line-height: 1.2;
             color: #3a7744;
         }
+
         .ans-label {
-            font-size: 0.7rem;
+            font-size: 1.0rem;
             letter-spacing: 0.5px;
             font-weight: 500;
             color: #6f8f63;
         }
+
         .badge-base {
             background: #dbefd2;
             padding: 4px 12px;
             border-radius: 30px;
             font-size: 0.8rem;
         }
+
         .log-card {
             background: #fefef7;
             border-radius: 28px;
             border: 1px solid #cde0c0;
         }
+
         .log-container {
             max-height: 260px;
             overflow-y: auto;
@@ -135,11 +167,13 @@
             border-radius: 20px;
             padding: 0.25rem;
         }
+
         .log-item {
             font-size: 0.8rem;
             padding: 0.6rem 0.8rem;
             border-bottom: 1px solid #e2edda;
         }
+
         .log-time {
             font-weight: 600;
             color: #568c42;
@@ -149,6 +183,7 @@
             display: inline-block;
             font-size: 0.7rem;
         }
+
         .btn-clear-log {
             background: transparent;
             border: 1px solid #cbdcc0;
@@ -157,15 +192,39 @@
             padding: 4px 12px;
             font-size: 0.75rem;
         }
+
         .btn-clear-log:hover {
             background: #e9f3e3;
         }
+
+        /* =========  FOOTER ENHANCED STYLES ========= */
         .footer-enhanced {
             background: rgba(255, 255, 240, 0.92);
             backdrop-filter: blur(4px);
             border-top: 2px solid #d4e8ca;
             border-radius: 28px 28px 0 0;
+            transition: all 0.2s;
         }
+
+        .footer-enhanced a {
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .footer-enhanced a:hover {
+            color: #2f6b2f !important;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .badge-version {
+            background: #eaf5e4;
+            color: #2a5c24;
+            font-weight: 500;
+            border: 1px solid #c2dcb2;
+        }
+
+        /* =========  SPLASH SCREEN STYLES (พร้อม PROGRESS BAR จริง) ========= */
         .splash-screen {
             position: fixed;
             top: 0;
@@ -178,23 +237,128 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
             opacity: 1;
             visibility: visible;
         }
+
         .splash-screen.hide {
             opacity: 0;
             visibility: hidden;
         }
+
         .splash-logo {
             width: 120px;
+            height: auto;
             margin-bottom: 20px;
-            animation: pulse 1.2s infinite;
+            animation: pulse 1.2s infinite ease-in-out;
         }
+
+        .splash-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c5e2a;
+            margin-bottom: 8px;
+        }
+
+        .splash-sub {
+            font-size: 0.9rem;
+            color: #6c9e5c;
+            letter-spacing: 1px;
+        }
+
+        /* Progress bar container สำหรับ splash */
+        .splash-progress-wrapper {
+            width: 70%;
+            max-width: 260px;
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+
+        .splash-progress-bg {
+            background-color: #cfdec7;
+            border-radius: 40px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .splash-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #5aa94a, #2c7a2c);
+            border-radius: 40px;
+            transition: width 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .splash-percent-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2a5e26;
+            margin-top: 8px;
+            background: rgba(255, 255, 240, 0.7);
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+        }
+
+        .spinner-wave {
+            display: flex;
+            gap: 5px;
+            margin-top: 18px;
+        }
+
+        .spinner-wave span {
+            width: 8px;
+            height: 8px;
+            background-color: #4c8b3c;
+            border-radius: 50%;
+            display: inline-block;
+            animation: wave 1s infinite ease-in-out both;
+        }
+
+        .spinner-wave span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .spinner-wave span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            100% { transform: scale(1.05); opacity: 1; }
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
         }
+
         #progressBar {
             position: fixed;
             top: 0;
@@ -205,24 +369,49 @@
             z-index: 9998;
             transition: width 0.1s;
         }
+
+        input::placeholder {
+            color: #a0b8a0;
+            opacity: 0.6;
+            font-weight: 400;
+        }
     </style>
 </head>
+
 <body>
     <div id="progressBar"></div>
+
+    <!-- SPLASH SCREEN พร้อม PROGRESS BAR อัปเดต % จริงจาก Firebase -->
     <div id="splashScreen" class="splash-screen">
-        <img src="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png" alt="logo" class="splash-logo">
+        <img src="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
+            alt="logo" class="splash-logo">
         <div class="splash-title">ถุงพลัส</div>
-        <div class="splash-sub">เชื่อมต่อ Firebase & โหลดข้อมูล...</div>
-        <div class="spinner-wave mt-3"><span></span><span></span><span></span></div>
+        <div class="splash-sub">PalletPro พร้อมระบบคลังข้อมูล</div>
+        
+        <!-- progress bar จริง + เปอร์เซ็นต์ -->
+        <div class="splash-progress-wrapper">
+            <div class="splash-progress-bg">
+                <div id="splashProgressFill" class="splash-progress-fill"></div>
+            </div>
+            <div class="text-center mt-2">
+                <span id="splashProgressPercent" class="splash-percent-text">0%</span>
+            </div>
+        </div>
+        
+        <!-- แสดงสถานะโหลดแบบ text เสริม (เพื่อความชัดเจน) -->
+        <div id="loadingStatusText" class="small text-success-emphasis mt-1" style="font-size: 0.75rem; opacity: 0.8;">กำลังเตรียมเชื่อมต่อ...</div>
+        <div class="spinner-wave mt-2"><span></span><span></span><span></span></div>
     </div>
 
     <div class="container px-3 px-md-4" style="max-width: 640px;">
         <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
             <div>
-                <h1 class="display-6 fw-semibold" style="color:#2c5e2a;"><i class="bi bi-bag-check-fill me-2"></i> ถุงพลัส</h1>
-                <p class="text-muted small">PalletPro · บันทึกงานบน Firebase (CRUD)</p>
+                <h1 class="display-6 fw-semibold" style="color:#2c5e2a;"><i class="bi bi-bag-check-fill me-2"></i>
+                    ถุงพลัส</h1>
+                <p class="text-muted small">PalletPro คำนวณงานแบบเร็ว · พร้อมประวัติการทำงาน</p>
             </div>
-            <button onclick="addNewJob()" class="btn btn-soft-green rounded-pill px-4 py-2 shadow-sm"><i class="bi bi-plus-circle me-1"></i> เพิ่มงาน</button>
+            <button onclick="addNewJob()" class="btn btn-soft-green rounded-pill px-4 py-2 shadow-sm"><i
+                    class="bi bi-plus-circle me-1"></i> เพิ่มงาน</button>
         </div>
 
         <div class="mb-4">
@@ -230,15 +419,18 @@
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-sliders2 fs-5 text-success-emphasis"></i>
-                        <label class="fw-semibold mb-0">ค่าตัวลบพาเลท (X)</label>
+                        <label class="fw-bold mb-0">ค่าตัวลบพาเลท (X)</label>
                         <span class="badge-base"><i class="bi bi-calculator-fill me-1"></i> ค่าเริ่มต้น 90</span>
                     </div>
                     <div class="d-flex align-items-center gap-2 bg-soft-mint px-3 py-1 rounded-4">
-                        <input type="number" id="baseValue" class="form-control form-control-sm text-center fw-bold border-0 bg-transparent" style="width: 95px; font-size: 1.4rem;" value="90" step="1">
+                        <input type="number" id="baseValue"
+                            class="form-control form-control-sm text-center fw-bold border-0 bg-transparent"
+                            style="width: 95px; font-size: 1.4rem;" value="90" step="1">
                         <span class="fw-semibold">พาเลท</span>
                     </div>
                 </div>
-                <div class="small text-secondary mt-2"><i class="bi bi-info-circle-fill me-1"></i> ผลลัพธ์ = B - X (ปรับ X ได้ทันที)</div>
+                <div class="small text-secondary mt-2"><i class="bi bi-info-circle-fill me-1"></i>
+                    ผลลัพธ์ B - X = จำนวนพาเลทสุทธิ (ปรับค่า X ได้ทันที)</div>
             </div>
         </div>
 
@@ -252,25 +444,56 @@
                         <h5 class="fw-semibold mb-0">Logs บันทึกการทำงาน</h5>
                         <span id="logCountBadge" class="badge bg-secondary-subtle text-dark rounded-pill">0</span>
                     </div>
-                    <button id="clearLogsBtn" class="btn-clear-log"><i class="bi bi-trash3 me-1"></i> ล้าง logs ทั้งหมด</button>
+                    <button id="clearLogsBtn" class="btn-clear-log"><i class="bi bi-trash3 me-1"></i> ล้าง logs
+                        ทั้งหมด</button>
                 </div>
                 <div id="logContainer" class="log-container">
                     <div class="text-center text-muted small py-3">กำลังโหลด logs...</div>
                 </div>
+                <div class="small text-secondary mt-2 text-center opacity-50">
+                    <i class="bi bi-info-circle"></i> บันทึกการกรอกค่า A/B, ผลลัพธ์, เพิ่ม/ลบงาน, เปลี่ยนค่าตัวลบ
+                </div>
             </div>
         </div>
 
-        <footer class="footer-enhanced mt-4 pt-3 pb-2 px-3 text-center small text-secondary">
-            © <span id="currentYear"></span> <a href="https://sumettampornsak.vercel.app" target="_blank" class="text-green-soft">Sumett Ampornsak</a> · เวอร์ชัน Firebase CRUD 6.0.3
+        <!-- ENHANCED FOOTER -->
+        <footer class="footer-enhanced mt-4 pt-3 pb-2 px-3 px-md-4 shadow-sm">
+            <div class="row align-items-center g-3">
+                <div class="col-md-6 text-center text-md-start">
+                    <div class="small text-secondary">
+                        <i class="bi bi-c-circle me-1"></i>
+                        <span id="currentYear"></span>
+                        <a href="https://sumettampornsak.vercel.app" target="_blank"
+                            class="text-green-soft fw-semibold text-decoration-none mx-1">
+                            Sumett Ampornsak
+                        </a>
+                        <span class="mx-1 d-none d-md-inline">•</span>
+                        <span class="d-block d-md-inline">All rights reserved.</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <span
+                        class="badge-version badge rounded-pill d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2">
+                        <i class="bi bi-tag-fill"></i> เวอร์ชัน: 7.1.0
+                    </span>
+                </div>
+                <div class="col-12 mt-2">
+                    <div class="text-center opacity-75 small" style="font-size: 0.7rem;">
+                        <i class="bi bi-dot"></i> Last Updated: 27 เมษายน 2569 <i class="bi bi-dot"></i>
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
 
     <div class="position-fixed bottom-0 end-0 p-3 z-3">
-        <button onclick="addNewJob()" class="floating-add d-flex align-items-center justify-content-center shadow-lg border-0"><i class="bi bi-plus-lg fw-bold"></i></button>
+        <button onclick="addNewJob()"
+            class="floating-add d-flex align-items-center justify-content-center shadow-lg border-0"><i
+                class="bi bi-plus-lg fw-bold"></i></button>
     </div>
 
     <script>
-        // ==================== FIREBASE CONFIG (DATABASE URL แก้ไขแล้ว) ====================
+        // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
             apiKey: "AIzaSyC4ASnt4d4bqKY2IQPa4xQQeBrVQFevT9M",
             authDomain: "palletpro-db.firebaseapp.com",
@@ -281,52 +504,96 @@
             appId: "1:750210916860:web:6f425f8b206eaf39dc5279"
         };
 
-        // เริ่มต้น Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const jobsRef = database.ref("jobs");
         const logsRef = database.ref("logs");
 
-        // --------------------------------------------------------------
-        // ฟังก์ชันปิด Splash Screen (รับประกันว่าหายไป)
-        // --------------------------------------------------------------
-        let splashHidden = false;
+        // ---------- STATE สำหรับ PROGRESS BAR จริง ----------
+        let jobsLoadedFlag = false;    // โหลด jobs สำเร็จ (Snapshot ตัวแรก)
+        let logsLoadedFlag = false;    // โหลด logs สำเร็จ
+        let splashClosed = false;      // ป้องกันการอัปเดตหลังจากซ่อนแล้ว
+        let fallbackTimeoutUsed = false;
+
+        // DOM elements ที่ใช้ใน splash
+        const splashElem = document.getElementById('splashScreen');
+        const progressFill = document.getElementById('splashProgressFill');
+        const percentSpan = document.getElementById('splashProgressPercent');
+        const statusTextSpan = document.getElementById('loadingStatusText');
+
+        // ฟังก์ชันอัปเดต progress bar + % + ข้อความสถานะ (ตาม % จริง)
+        function updateSplashProgress() {
+            if (splashClosed) return;
+            if (!progressFill || !percentSpan) return;
+
+            // 2 ขั้นตอนหลัก: jobs + logs -> แต่ละตัวคิดเป็น 50%
+            let completedSteps = 0;
+            if (jobsLoadedFlag) completedSteps++;
+            if (logsLoadedFlag) completedSteps++;
+            const totalSteps = 2;
+            let percent = (completedSteps / totalSteps) * 100;
+            percent = Math.min(100, Math.max(0, percent));
+            const percentInt = Math.floor(percent);
+            
+            progressFill.style.width = percent + '%';
+            percentSpan.innerText = percentInt + '%';
+
+            // เสริมข้อความสถานะให้สัมพันธ์กับ % ที่แท้จริง
+            if (!jobsLoadedFlag && !logsLoadedFlag) {
+                if (statusTextSpan) statusTextSpan.innerText = 'กำลังเชื่อมต่อฐานข้อมูล...';
+            } else if (jobsLoadedFlag && !logsLoadedFlag) {
+                if (statusTextSpan) statusTextSpan.innerText = 'โหลดรายการงานสำเร็จ กำลังโหลดประวัติ...';
+            } else if (jobsLoadedFlag && logsLoadedFlag) {
+                if (statusTextSpan) statusTextSpan.innerText = 'โหลดข้อมูลครบถ้วน! กำลังเปิดแอปพลิเคชัน';
+            }
+            
+            // ถ้าทั้งคู่เป็น true และ splash ยังไม่ปิด -> ปิด splash ทันที
+            if (jobsLoadedFlag && logsLoadedFlag && !splashClosed) {
+                hideSplashScreen();
+            }
+        }
+
+        // ฟังก์ชันซ่อน splash อย่างสมูท
         function hideSplashScreen() {
-            if (splashHidden) return;
-            splashHidden = true;
-            const splash = document.getElementById('splashScreen');
-            if (splash) {
-                splash.classList.add('hide');
+            if (splashClosed) return;
+            splashClosed = true;
+            if (splashElem) {
+                splashElem.classList.add('hide');
                 setTimeout(() => {
-                    splash.style.display = 'none';
+                    if (splashElem) splashElem.style.display = 'none';
                 }, 500);
             }
         }
 
-        // Fallback: ถ้าโหลดนานเกิน 5 วินาที ให้ปิด splash พร้อมแจ้งเตือน
+        // Fallback กรณีโหลดนานเกิน 6 วินาที ให้ปิด splash (กันค้าง)
         setTimeout(() => {
-            if (!splashHidden) {
-                hideSplashScreen();
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'โหลดข้อมูลช้า',
-                    text: 'อาจเชื่อมต่อ Firebase ไม่เสถียร แต่คุณสามารถใช้งานได้ (ข้อมูลอาจไม่อัปเดต)',
-                    toast: true,
-                    timer: 3000,
-                    showConfirmButton: false,
-                    position: 'top-end'
-                });
+            if (!splashClosed) {
+                // ถ้ายังไม่โหลด jobs/logs เลย -> ให้ force ปิดและแจ้งเตือน
+                if (!jobsLoadedFlag || !logsLoadedFlag) {
+                    console.warn("Fallback: ปิด splash เนื่องจากโหลดนานเกินไป");
+                    if (statusTextSpan) statusTextSpan.innerText = '⚠️ การเชื่อมต่อล่าช้า แต่คุณสามารถใช้งานได้';
+                    hideSplashScreen();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'โหลดข้อมูลบางส่วน',
+                        text: 'การเชื่อมต่อ DB ไม่เร็วเท่าที่ควร แตะตกลงเพื่อเริ่มใช้งาน (ข้อมูลอาจไม่อัปเดตล่าสุด)',
+                        toast: true,
+                        timer: 3500,
+                        showConfirmButton: false,
+                        position: 'top-end'
+                    });
+                } else {
+                    hideSplashScreen();
+                }
             }
-        }, 5000);
+        }, 6000);
 
-        // Global state
-        let currentJobs = [];
-        let currentLogs = [];
-
+        // Helper: แสดง Toast
         function showToast(icon, title, timer = 1500) {
             Swal.fire({ icon, title, toast: true, timer, showConfirmButton: false, position: 'top-end' });
         }
 
+        // บันทึก log เข้าระบบ
         async function addSystemLog(message, relatedJobId = null) {
             try {
                 const newLogRef = logsRef.push();
@@ -336,14 +603,18 @@
                     jobId: relatedJobId,
                     readableTime: new Date().toLocaleString('th-TH', { hour12: false })
                 });
-            } catch(e) { console.warn("Log error:", e); }
+            } catch (e) { console.warn("Log error:", e); }
         }
+
+        // ========== RENDER งานและ logs ==========
+        let currentJobs = [];
+        let currentLogs = [];
 
         function renderJobs() {
             const container = document.getElementById('jobList');
             if (!container) return;
             if (!currentJobs.length) {
-                container.innerHTML = `<div class="text-center p-5 text-muted bg-white rounded-4 shadow-sm"><i class="bi bi-inbox fs-1"></i><p class="mt-2">ยังไม่มีงาน กดปุ่ม + เพื่อเพิ่มงาน</p></div>`;
+                container.innerHTML = `<div class="text-center p-5 text-muted bg-white rounded-4 shadow-sm"><i class="bi bi-inbox fs-1"></i><p class="mt-2">ยังไม่มีงาน</p></div>`;
                 return;
             }
             const baseX = parseFloat(document.getElementById('baseValue').value) || 90;
@@ -351,27 +622,36 @@
             currentJobs.forEach((job, idx) => {
                 const a = job.a ?? 0;
                 const b = job.b ?? 0;
-                const result = (b - baseX).toFixed(2);
+                const bagResult = Math.max(0, Math.floor(b - a));
+                const palletResult = Math.max(0, Math.floor(b - baseX));
                 html += `
                     <div class="job-card p-3 p-md-4" data-job-id="${job.id}">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="job-number"><i class="bi bi-briefcase-fill me-1"></i> งานที่ ${idx+1}</div>
+                            <div class="job-number"><i class="bi bi-briefcase-fill me-1"></i> งานที่ ${idx + 1}</div>
                             <i class="bi bi-trash3 delete-icon fs-5" onclick="deleteJobById('${job.id}')"></i>
                         </div>
                         <div class="row g-3 align-items-end">
                             <div class="col-6">
-                                <label class="form-label small fw-semibold text-secondary">ค่าถุง (A)</label>
-                                <input type="number" id="a_${job.id}" class="form-control form-control-lg-custom" value="${a}" step="any" placeholder="A">
+                                <label class="form-label small fw-semibold text-secondary" style="font-size: 2.1rem;">ค่า(A)</label>
+                                <input type="number" id="a_${job.id}" class="form-control form-control-lg-custom" value="${a || ''}" step="any" placeholder="0">
                             </div>
                             <div class="col-6">
-                                <label class="form-label small fw-semibold text-secondary">ค่าพาเลท (B)</label>
-                                <input type="number" id="b_${job.id}" class="form-control form-control-lg-custom" value="${b}" step="any" placeholder="B">
+                                <label class="form-label small fw-semibold text-secondary" style="font-size: 2.1rem;">ค่า(B)</label>
+                                <input type="number" id="b_${job.id}" class="form-control form-control-lg-custom" value="${b || ''}" step="any" placeholder="0">
                             </div>
                             <div class="col-12 mt-2">
                                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                     <div class="result-badge flex-grow-1 text-center">
-                                        <div class="ans-label">ผลลัพธ์สุทธิ (B - X)</div>
-                                        <div class="answer-number" id="result_${job.id}">${result}</div>
+                                        <div class="row text-center">
+                                            <div class="col-6">
+                                                <div class="ans-label">ถุงสุทธิ (B - A)</div>
+                                                <div class="answer-number">${bagResult}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="ans-label">พาเลทสุทธิ (B - X)</div>
+                                                <div class="answer-number">${palletResult}</div>
+                                            </div>
+                                        </div>
                                         <small class="text-muted">X = ${baseX}</small>
                                     </div>
                                     <button class="btn btn-soft-green rounded-pill px-4" onclick="calculateAndUpdate('${job.id}')">
@@ -386,25 +666,30 @@
             container.innerHTML = html;
         }
 
-        window.calculateAndUpdate = async function(jobId) {
+        window.calculateAndUpdate = async function (jobId) {
+            showToast('info', 'กำลังคำนวณ...', 800);
             const aInput = document.getElementById(`a_${jobId}`);
             const bInput = document.getElementById(`b_${jobId}`);
             if (!aInput || !bInput) return;
             const aVal = parseFloat(aInput.value) || 0;
             const bVal = parseFloat(bInput.value) || 0;
             const baseX = parseFloat(document.getElementById('baseValue').value) || 90;
-            const result = bVal - baseX;
+            let rawBag = bVal - aVal;
+            let rawPallet = bVal - baseX;
+            const resultBag = Math.max(0, Math.floor(rawBag));
+            const resultPallet = Math.max(0, Math.floor(rawPallet));
             await jobsRef.child(jobId).update({
                 a: aVal,
                 b: bVal,
-                updatedAt: firebase.database.ServerValue.TIMESTAMP,
-                lastResult: result
+                bagResult: resultBag,
+                palletResult: resultPallet,
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
             });
-            await addSystemLog(`🧮 คำนวณงาน ID:${jobId.slice(-6)} | A=${aVal} B=${bVal} → ผลลัพธ์=${result.toFixed(2)}`, jobId);
+            await addSystemLog(`คำนวณงาน ID:${jobId.slice(-6)} | A=${aVal} B=${bVal} → ถุง=${resultBag} | พาเลท=${resultPallet}`, jobId);
             showToast('success', 'คำนวณและบันทึกสำเร็จ', 1200);
         };
 
-        window.deleteJobById = async function(jobId) {
+        window.deleteJobById = async function (jobId) {
             const result = await Swal.fire({
                 title: 'ยืนยันการลบ',
                 text: 'ลบงานนี้และข้อมูลทั้งหมด?',
@@ -416,12 +701,12 @@
             });
             if (result.isConfirmed) {
                 await jobsRef.child(jobId).remove();
-                await addSystemLog(`🗑️ ลบงาน ID:${jobId.slice(-6)}`, jobId);
+                await addSystemLog(`ลบงาน ID:${jobId.slice(-6)}`, jobId);
                 showToast('success', 'ลบงานเรียบร้อย', 1200);
             }
         };
 
-        window.addNewJob = async function() {
+        window.addNewJob = async function () {
             const newJobRef = jobsRef.push();
             await newJobRef.set({
                 a: 0,
@@ -430,12 +715,12 @@
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 updatedAt: firebase.database.ServerValue.TIMESTAMP
             });
-            await addSystemLog(`✨ สร้างงานใหม่ ID:${newJobRef.key.slice(-6)}`, newJobRef.key);
+            await addSystemLog(`สร้างงานใหม่ ID:${newJobRef.key.slice(-6)}`, newJobRef.key);
             showToast('success', 'เพิ่มงานใหม่แล้ว', 1000);
         };
 
         document.getElementById('clearLogsBtn')?.addEventListener('click', async () => {
-            const confirm = await Swal.fire({ title: 'ล้างประวัติทั้งหมด?', text: 'Logs จะถูกลบจาก Firebase', icon: 'warning', showCancelButton: true });
+            const confirm = await Swal.fire({ title: 'ล้างประวัติทั้งหมด?', text: 'Logs จะถูกลบจาก DB ', icon: 'warning', showCancelButton: true });
             if (confirm.isConfirmed) {
                 await logsRef.remove();
                 showToast('info', 'ล้าง logs เรียบร้อย');
@@ -448,10 +733,10 @@
             if (!container) return;
             if (!currentLogs.length) {
                 container.innerHTML = `<div class="text-center text-muted small py-3">ยังไม่มีบันทึกการทำงาน</div>`;
-                if(badge) badge.innerText = '0';
+                if (badge) badge.innerText = '0';
                 return;
             }
-            if(badge) badge.innerText = currentLogs.length;
+            if (badge) badge.innerText = currentLogs.length;
             const logsHtml = currentLogs.map(log => {
                 let timeStr = log.readableTime;
                 if (!timeStr && log.timestamp) {
@@ -471,7 +756,7 @@
         }
 
         function escapeHtml(str) {
-            return str.replace(/[&<>]/g, function(m) {
+            return str.replace(/[&<>]/g, function (m) {
                 if (m === '&') return '&amp;';
                 if (m === '<') return '&lt;';
                 if (m === '>') return '&gt;';
@@ -479,10 +764,9 @@
             });
         }
 
-        // Firebase listeners และปิด Splash เมื่อโหลดข้อมูลครั้งแรก
-        let initialDataLoaded = false;
+        // ---------- Firebase Listeners (พร้อมอัปเดต PROGRESS BAR แบบ REAL) ----------
         function initFirebaseListeners() {
-            // ฟัง jobs
+            // ฟัง Jobs (ครั้งแรกจะตั้ง flag jobsLoadedFlag = true และอัปเดต progress)
             jobsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 const jobsArray = [];
@@ -501,20 +785,23 @@
                 jobsArray.sort((x, y) => (x.createdAt || 0) - (y.createdAt || 0));
                 currentJobs = jobsArray;
                 renderJobs();
-
-                if (!initialDataLoaded) {
-                    initialDataLoaded = true;
-                    hideSplashScreen();
+                
+                // ตั้ง flag การโหลด jobs สำเร็จ (เฉพาะครั้งแรกที่ยังไม่เคยโหลด)
+                if (!jobsLoadedFlag && !splashClosed) {
+                    jobsLoadedFlag = true;
+                    updateSplashProgress();
                 }
             }, (error) => {
                 console.error("Jobs listener error:", error);
-                if (!initialDataLoaded) {
-                    hideSplashScreen();
-                    Swal.fire({ icon: 'error', title: 'เชื่อมต่อ Firebase ล้มเหลว', text: 'กรุณาตรวจสอบการตั้งค่า Realtime Database Rules', confirmButtonText: 'ตกลง' });
+                if (!jobsLoadedFlag && !splashClosed) {
+                    // ถ้า jobs error และยังไม่โหลด ให้ถือว่าโหลดไม่สำเร็จแต่เรายอมให้ progress ขึ้น แต่ยังไม่ปิด splash จนกว่าจะได้ logs?
+                    jobsLoadedFlag = false;
+                    if (statusTextSpan) statusTextSpan.innerText = 'โหลดงานไม่สำเร็จ แต่พยายามต่อ...';
+                    updateSplashProgress();
                 }
             });
 
-            // ฟัง logs
+            // ฟัง Logs (limit 100 รายการล่าสุด)
             logsRef.orderByChild('timestamp').limitToLast(100).on('value', (snapshot) => {
                 const logsArr = [];
                 if (snapshot.val()) {
@@ -525,14 +812,26 @@
                 logsArr.reverse();
                 currentLogs = logsArr;
                 renderLogs();
+                
+                if (!logsLoadedFlag && !splashClosed) {
+                    logsLoadedFlag = true;
+                    updateSplashProgress();
+                }
+            }, (error) => {
+                console.warn("Logs listener error:", error);
+                if (!logsLoadedFlag && !splashClosed) {
+                    logsLoadedFlag = false; // ยังไม่สำเร็จ แต่พยายามอัปเดต progress
+                    if (statusTextSpan) statusTextSpan.innerText = 'โหลดประวัติล่าช้า กำลังลองใหม่...';
+                    updateSplashProgress();
+                }
             });
         }
 
-        // Event listeners
+        // Event listeners สำหรับปรับ base value และ scroll progress bar
         document.getElementById('baseValue')?.addEventListener('input', () => {
             renderJobs();
             const newX = document.getElementById('baseValue').value;
-            addSystemLog(`📏 เปลี่ยนค่าตัวลบพาเลทเป็น ${newX}`);
+            addSystemLog(`เปลี่ยนค่าตัวลบพาเลทเป็น ${newX}`);
         });
 
         window.addEventListener('scroll', () => {
@@ -547,8 +846,15 @@
         window.addEventListener('load', () => {
             AOS.init({ duration: 600, once: true });
             initFirebaseListeners();
+            // ถ้าผ่านไป 0.5 วินาทียังไม่มีการโหลดอะไรเลย ให้อัปเดตสถานะเล็กน้อย
+            setTimeout(() => {
+                if (!jobsLoadedFlag && !logsLoadedFlag && !splashClosed && statusTextSpan) {
+                    statusTextSpan.innerText = 'กำลังรันข้อมูลจากเซิร์ฟเวอร์...';
+                }
+            }, 800);
         });
     </script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
+
 </html>

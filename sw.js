@@ -1,4 +1,4 @@
-const CACHE_NAME = 'thungplus-v1';
+const CACHE_NAME = 'thungplus-v2';
 const urlsToCache = [
   '/',
   '/index.html',  // หรือชื่อไฟล์ HTML ของคุณ
@@ -13,6 +13,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
+  self.skipWaiting(); // ← เพิ่มบรรทัดนี้ ให้ activate ทันที
 });
 
 self.addEventListener('fetch', event => {
@@ -29,6 +30,6 @@ self.addEventListener('activate', event => {
       keys.map(key => {
         if (key !== CACHE_NAME) return caches.delete(key);
       })
-    ))
+    )).then(() => self.clients.claim()) // ← เพิ่มบรรทัดนี้ ให้ควบคุมหน้าใหม่ทันที
   );
 });
