@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ถุงพลัส · PalletPro Edition</title>
+    <title>ถุงพลัส · PalletPro · Firebase CRUD</title>
     <meta name="description" content="ถุงพลัส PalletPro เว็บแอพคำนวณถุงและพาเลท พร้อมระบบบันทึกประวัติการทำงานบน Firebase" />
     <meta name="author" content="Sumett Ampornsak" />
     <link rel="icon" href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png" type="image/x-icon" />
-    <!-- PWA Meta -->
     <meta name="theme-color" content="#4c8b3c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ถุงพลัส">
     <link rel="apple-touch-icon" href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png">
-    <!-- Bootstrap 5 + Icons + AOS + Google Fonts + SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Firebase SDK (v9 compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    
     <style>
         * { font-family: 'Kanit', sans-serif; }
         body {
@@ -55,15 +51,6 @@
             background-color: #3b6e2e;
             transform: scale(0.97);
             box-shadow: 0 5px 12px rgba(60, 110, 40, 0.2);
-        }
-        .btn-outline-green-soft {
-            border: 1.5px solid #7fae6b;
-            color: #2d5a2a;
-            background: white;
-        }
-        .btn-outline-green-soft:hover {
-            background-color: #e1f3da;
-            border-color: #568c42;
         }
         .base-input-card {
             background-color: #f8fff4;
@@ -136,7 +123,6 @@
             border-radius: 30px;
             font-size: 0.8rem;
         }
-        /* Log section */
         .log-card {
             background: #fefef7;
             border-radius: 28px;
@@ -196,8 +182,15 @@
             opacity: 1;
             visibility: visible;
         }
-        .splash-screen.hide { opacity: 0; visibility: hidden; }
-        .splash-logo { width: 120px; margin-bottom: 20px; animation: pulse 1.2s infinite; }
+        .splash-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .splash-logo {
+            width: 120px;
+            margin-bottom: 20px;
+            animation: pulse 1.2s infinite;
+        }
         @keyframes pulse {
             0% { transform: scale(0.95); opacity: 0.8; }
             100% { transform: scale(1.05); opacity: 1; }
@@ -232,7 +225,6 @@
             <button onclick="addNewJob()" class="btn btn-soft-green rounded-pill px-4 py-2 shadow-sm"><i class="bi bi-plus-circle me-1"></i> เพิ่มงาน</button>
         </div>
 
-        <!-- ค่าตัวลบพาเลท (X) -->
         <div class="mb-4">
             <div class="base-input-card p-3 p-md-4 bg-white shadow-sm">
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
@@ -246,14 +238,12 @@
                         <span class="fw-semibold">พาเลท</span>
                     </div>
                 </div>
-                <div class="small text-secondary mt-2"><i class="bi bi-info-circle-fill me-1"></i> ผลลัพธ์ = B - X (สามารถปรับ X ได้ทันที)</div>
+                <div class="small text-secondary mt-2"><i class="bi bi-info-circle-fill me-1"></i> ผลลัพธ์ = B - X (ปรับ X ได้ทันที)</div>
             </div>
         </div>
 
-        <!-- รายการงาน (jobs) -->
         <div id="jobList" class="d-flex flex-column gap-3"></div>
 
-        <!-- บันทึกประวัติ Logs (Firebase) -->
         <div class="mt-4">
             <div class="log-card p-3 p-md-4 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
@@ -271,7 +261,7 @@
         </div>
 
         <footer class="footer-enhanced mt-4 pt-3 pb-2 px-3 text-center small text-secondary">
-            © <span id="currentYear"></span> <a href="https://sumettampornsak.vercel.app" target="_blank" class="text-green-soft">Sumett Ampornsak</a> · เวอร์ชัน Firebase CRUD 6.0.1
+            © <span id="currentYear"></span> <a href="https://sumettampornsak.vercel.app" target="_blank" class="text-green-soft">Sumett Ampornsak</a> · เวอร์ชัน Firebase CRUD 6.0.3
         </footer>
     </div>
 
@@ -280,46 +270,75 @@
     </div>
 
     <script>
-        // ======================== FIREBASE CONFIGURATION ========================
-        // 🔧 กรุณาแทนที่ค่าด้วย config ของคุณจาก Firebase Console
+        // ==================== FIREBASE CONFIG (DATABASE URL แก้ไขแล้ว) ====================
         const firebaseConfig = {
-  apiKey: "AIzaSyC4ASnt4d4bqKY2IQPa4xQQeBrVQFevT9M",
-  authDomain: "palletpro-db.firebaseapp.com",
-databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase.app/",
-  projectId: "palletpro-db",
-  storageBucket: "palletpro-db.firebasestorage.app",
-  messagingSenderId: "750210916860",
-  appId: "1:750210916860:web:6f425f8b206eaf39dc5279"
-};
-        
+            apiKey: "AIzaSyC4ASnt4d4bqKY2IQPa4xQQeBrVQFevT9M",
+            authDomain: "palletpro-db.firebaseapp.com",
+            databaseURL: "https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "palletpro-db",
+            storageBucket: "palletpro-db.firebasestorage.app",
+            messagingSenderId: "750210916860",
+            appId: "1:750210916860:web:6f425f8b206eaf39dc5279"
+        };
+
         // เริ่มต้น Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const jobsRef = database.ref("jobs");
         const logsRef = database.ref("logs");
 
+        // --------------------------------------------------------------
+        // ฟังก์ชันปิด Splash Screen (รับประกันว่าหายไป)
+        // --------------------------------------------------------------
+        let splashHidden = false;
+        function hideSplashScreen() {
+            if (splashHidden) return;
+            splashHidden = true;
+            const splash = document.getElementById('splashScreen');
+            if (splash) {
+                splash.classList.add('hide');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // Fallback: ถ้าโหลดนานเกิน 5 วินาที ให้ปิด splash พร้อมแจ้งเตือน
+        setTimeout(() => {
+            if (!splashHidden) {
+                hideSplashScreen();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'โหลดข้อมูลช้า',
+                    text: 'อาจเชื่อมต่อ Firebase ไม่เสถียร แต่คุณสามารถใช้งานได้ (ข้อมูลอาจไม่อัปเดต)',
+                    toast: true,
+                    timer: 3000,
+                    showConfirmButton: false,
+                    position: 'top-end'
+                });
+            }
+        }, 5000);
+
         // Global state
-        let currentJobs = [];      // เก็บ jobs array ปัจจุบันสำหรับใช้ render
+        let currentJobs = [];
         let currentLogs = [];
 
-        // Helper: แสดง SweetAlert แจ้งเตือน
         function showToast(icon, title, timer = 1500) {
             Swal.fire({ icon, title, toast: true, timer, showConfirmButton: false, position: 'top-end' });
         }
 
-        // บันทึก Log ลง Firebase
         async function addSystemLog(message, relatedJobId = null) {
-            const newLogRef = logsRef.push();
-            const logEntry = {
-                timestamp: new Date().toISOString(),
-                message: message,
-                jobId: relatedJobId,
-                readableTime: new Date().toLocaleString('th-TH', { hour12: false })
-            };
-            await newLogRef.set(logEntry);
+            try {
+                const newLogRef = logsRef.push();
+                await newLogRef.set({
+                    timestamp: firebase.database.ServerValue.TIMESTAMP,
+                    message: message,
+                    jobId: relatedJobId,
+                    readableTime: new Date().toLocaleString('th-TH', { hour12: false })
+                });
+            } catch(e) { console.warn("Log error:", e); }
         }
 
-        // เรนเดอร์ jobs ทั้งหมด (data จาก Firebase)
         function renderJobs() {
             const container = document.getElementById('jobList');
             if (!container) return;
@@ -367,7 +386,6 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
             container.innerHTML = html;
         }
 
-        // คำนวณสำหรับ job ใด job หนึ่งแล้วอัปเดต Firebase
         window.calculateAndUpdate = async function(jobId) {
             const aInput = document.getElementById(`a_${jobId}`);
             const bInput = document.getElementById(`b_${jobId}`);
@@ -376,8 +394,6 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
             const bVal = parseFloat(bInput.value) || 0;
             const baseX = parseFloat(document.getElementById('baseValue').value) || 90;
             const result = bVal - baseX;
-            
-            // อัปเดตใน Firebase
             await jobsRef.child(jobId).update({
                 a: aVal,
                 b: bVal,
@@ -388,7 +404,6 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
             showToast('success', 'คำนวณและบันทึกสำเร็จ', 1200);
         };
 
-        // ลบงาน
         window.deleteJobById = async function(jobId) {
             const result = await Swal.fire({
                 title: 'ยืนยันการลบ',
@@ -406,22 +421,19 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
             }
         };
 
-        // เพิ่มงานใหม่
         window.addNewJob = async function() {
             const newJobRef = jobsRef.push();
-            const newJob = {
+            await newJobRef.set({
                 a: 0,
                 b: 0,
                 lastResult: 0,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 updatedAt: firebase.database.ServerValue.TIMESTAMP
-            };
-            await newJobRef.set(newJob);
+            });
             await addSystemLog(`✨ สร้างงานใหม่ ID:${newJobRef.key.slice(-6)}`, newJobRef.key);
             showToast('success', 'เพิ่มงานใหม่แล้ว', 1000);
         };
 
-        // ล้าง logs ทั้งหมด
         document.getElementById('clearLogsBtn')?.addEventListener('click', async () => {
             const confirm = await Swal.fire({ title: 'ล้างประวัติทั้งหมด?', text: 'Logs จะถูกลบจาก Firebase', icon: 'warning', showCancelButton: true });
             if (confirm.isConfirmed) {
@@ -430,7 +442,6 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
             }
         });
 
-        // เรนเดอร์ logs จาก Firebase
         function renderLogs() {
             const container = document.getElementById('logContainer');
             const badge = document.getElementById('logCountBadge');
@@ -441,21 +452,37 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
                 return;
             }
             if(badge) badge.innerText = currentLogs.length;
-            const logsHtml = currentLogs.map(log => `
-                <div class="log-item">
-                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                        <span class="log-time"><i class="bi bi-clock me-1"></i>${log.readableTime || new Date(log.timestamp).toLocaleString('th-TH')}</span>
+            const logsHtml = currentLogs.map(log => {
+                let timeStr = log.readableTime;
+                if (!timeStr && log.timestamp) {
+                    const date = new Date(log.timestamp);
+                    timeStr = date.toLocaleString('th-TH', { hour12: false });
+                }
+                return `
+                    <div class="log-item">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                            <span class="log-time"><i class="bi bi-clock me-1"></i>${timeStr || 'ไม่ทราบเวลา'}</span>
+                        </div>
+                        <div class="log-message mt-1">${escapeHtml(log.message)}</div>
                     </div>
-                    <div class="log-message mt-1">${escapeHtml(log.message)}</div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             container.innerHTML = logsHtml;
         }
-        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
-        // ---- Firebase Real-time listeners ----
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Firebase listeners และปิด Splash เมื่อโหลดข้อมูลครั้งแรก
+        let initialDataLoaded = false;
         function initFirebaseListeners() {
-            // ฟังการเปลี่ยนแปลงของ jobs
+            // ฟัง jobs
             jobsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 const jobsArray = [];
@@ -471,39 +498,43 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
                         });
                     });
                 }
-                // เรียงตาม createdAt (เก่าสุดบน?)
-                jobsArray.sort((x,y) => (x.createdAt || 0) - (y.createdAt || 0));
+                jobsArray.sort((x, y) => (x.createdAt || 0) - (y.createdAt || 0));
                 currentJobs = jobsArray;
                 renderJobs();
-                // ซ่อน splash screen เมื่อโหลด jobs ครั้งแรก
-                const splash = document.getElementById('splashScreen');
-                if(splash && splash.classList) splash.classList.add('hide');
-                setTimeout(() => { if(splash) splash.style.display = 'none'; }, 500);
+
+                if (!initialDataLoaded) {
+                    initialDataLoaded = true;
+                    hideSplashScreen();
+                }
+            }, (error) => {
+                console.error("Jobs listener error:", error);
+                if (!initialDataLoaded) {
+                    hideSplashScreen();
+                    Swal.fire({ icon: 'error', title: 'เชื่อมต่อ Firebase ล้มเหลว', text: 'กรุณาตรวจสอบการตั้งค่า Realtime Database Rules', confirmButtonText: 'ตกลง' });
+                }
             });
 
-            // ฟัง logs แบบเรียลไทม์
+            // ฟัง logs
             logsRef.orderByChild('timestamp').limitToLast(100).on('value', (snapshot) => {
                 const logsArr = [];
-                if(snapshot.val()) {
+                if (snapshot.val()) {
                     Object.values(snapshot.val()).forEach(log => {
                         logsArr.push(log);
                     });
                 }
-                logsArr.reverse(); // ใหม่ล่าสุดอยู่บน
+                logsArr.reverse();
                 currentLogs = logsArr;
                 renderLogs();
             });
         }
 
-        // เมื่อค่า X เปลี่ยนแปลง ให้ rerender เพื่อให้ผลลัพธ์แสดงตาม X ใหม่ (โดยไม่ต้องคำนวณใหม่ทันที แต่ UI จะ update)
+        // Event listeners
         document.getElementById('baseValue')?.addEventListener('input', () => {
-            renderJobs();  // แค่แสดงผลลัพธ์ตามค่า X ใหม่ (ไม่บันทึกค่าลง job จนกว่าจะกดคำนวณ)
-            // บันทึก log การเปลี่ยน X (ทางเลือก)
+            renderJobs();
             const newX = document.getElementById('baseValue').value;
             addSystemLog(`📏 เปลี่ยนค่าตัวลบพาเลทเป็น ${newX}`);
         });
 
-        // Scroll progress
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -511,28 +542,13 @@ databaseURL :"https://palletpro-db-default-rtdb.asia-southeast1.firebasedatabase
             document.getElementById('progressBar').style.width = scrolled + "%";
         });
 
-        // ปีปัจจุบัน
         document.getElementById('currentYear').innerText = new Date().getFullYear();
 
-        // เริ่มต้นระบบ และซ่อน splash เมื่อเชื่อมต่อสำเร็จ
         window.addEventListener('load', () => {
             AOS.init({ duration: 600, once: true });
             initFirebaseListeners();
         });
-
-        // เตือนถ้า Firebase config ยังไม่ถูกต้อง
-        if(firebaseConfig.apiKey === "YOUR_API_KEY") {
-            setTimeout(() => {
-                Swal.fire({ icon: 'warning', title: '⚠️ ยังไม่ได้ตั้งค่า Firebase', text: 'กรุณาแก้ไข firebaseConfig ในโค้ดให้เป็นค่าจริงจาก Firebase Console', confirmButtonText: 'ตกลง' });
-            }, 1000);
-        }
     </script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // PWA service worker (optional) - รับจาก original
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW error:", err));
-        }
-    </script>
 </body>
 </html>
