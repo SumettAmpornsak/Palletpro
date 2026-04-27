@@ -1,123 +1,80 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ถุงพลัส · PalletPro · บันทึกการทำงาน</title>
-    <meta name="description" content="ถุงพลัส PalletPro เว็บแอพคำนวนถุงและพาเลท พร้อมระบบบันทึกประวัติการทำงาน" />
-    <meta name="keywords" content="ถุงพลัส, PalletPro,log,บันทึกการทำงาน,คำนวนถุง,คำนวนพาเลท" />
+    <title>ถุงพลัส · PalletPro Edition</title>
+    <meta name="description" content="ถุงพลัส PalletPro เว็บแอพคำนวณถุงและพาเลท พร้อมระบบบันทึกประวัติการทำงานบน Firebase" />
     <meta name="author" content="Sumett Ampornsak" />
-    <link rel="icon"
-        href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
-        type="image/x-icon" />
+    <link rel="icon" href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png" type="image/x-icon" />
     <!-- PWA Meta -->
     <meta name="theme-color" content="#4c8b3c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ถุงพลัส">
-    <link rel="apple-touch-icon"
-        href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png">
-
-    <!-- Bootstrap 5 + Icons + core CSS -->
+    <link rel="apple-touch-icon" href="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png">
+    <!-- Bootstrap 5 + Icons + AOS + Google Fonts + SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- AOS (Animate on Scroll) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-    <!-- Google Fonts (Kanit ) -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <link rel="manifest" href="/manifest.json">
-
+    <!-- Firebase SDK (v9 compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    
     <style>
-        * {
-            font-family: 'Kanit', sans-serif;
-        }
-
+        * { font-family: 'Kanit', sans-serif; }
         body {
             background: linear-gradient(145deg, #eef7e8 0%, #e2f0da 100%);
             min-height: 100vh;
             padding-bottom: 5rem;
             margin: 0;
         }
-
-        /* การ์ดนุ่มนวล มินิมอล */
         .job-card {
-            background: #ffffffdd;
-            backdrop-filter: blur(2px);
             background: #ffffff;
             border-radius: 28px;
             border: 1px solid rgba(80, 140, 70, 0.2);
             transition: all 0.2s ease;
             box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.05);
         }
-
         .job-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 18px 28px -12px rgba(70, 120, 50, 0.2);
             border-color: #a0d18c;
         }
-
-        /* กำหนดสีเขียวอ่อนมินิมอล */
-        .bg-soft-mint {
-            background-color: #eef5e9;
-        }
-
-        .text-green-soft {
-            color: #2f6b2f;
-        }
-
-        .border-green-soft {
-            border-color: #bddbaf;
-        }
-
+        .bg-soft-mint { background-color: #eef5e9; }
+        .text-green-soft { color: #2f6b2f; }
         .btn-soft-green {
             background-color: #4c8b3c;
             border: none;
             color: white;
             transition: all 0.2s;
         }
-
         .btn-soft-green:hover {
             background-color: #3b6e2e;
             transform: scale(0.97);
             box-shadow: 0 5px 12px rgba(60, 110, 40, 0.2);
         }
-
         .btn-outline-green-soft {
             border: 1.5px solid #7fae6b;
             color: #2d5a2a;
             background: white;
         }
-
         .btn-outline-green-soft:hover {
             background-color: #e1f3da;
             border-color: #568c42;
         }
-
         .base-input-card {
             background-color: #f8fff4;
             border: 1.5px solid #cde2c2;
             border-radius: 24px;
-            transition: all 0.2s;
         }
-
-        .base-input-card:focus-within {
-            border-color: #6f9e5c;
-            box-shadow: 0 0 0 3px rgba(100, 160, 70, 0.2);
-        }
-
         .result-badge {
             background: #f2faeef0;
             border-radius: 32px;
             padding: 0.5rem 0.75rem;
         }
-
         .floating-add {
             width: 64px;
             height: 64px;
@@ -129,27 +86,21 @@
             box-shadow: 0 8px 18px rgba(70, 110, 40, 0.35);
             transition: 0.15s linear;
         }
-
         .floating-add:hover {
             background-color: #326b24;
             transform: scale(0.96);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
-
         input.form-control-lg-custom {
             font-size: 1.35rem;
             font-weight: 500;
             text-align: center;
             border-radius: 20px;
             border: 1.5px solid #cfe2c5;
-            background: #ffffff;
         }
-
         input.form-control-lg-custom:focus {
             border-color: #6c9e58;
             box-shadow: 0 0 0 3px rgba(108, 158, 88, 0.2);
         }
-
         .job-number {
             background-color: #eaf5e4;
             border-radius: 60px;
@@ -158,52 +109,39 @@
             font-weight: 500;
             color: #3c6e2c;
         }
-
         .delete-icon {
             cursor: pointer;
             transition: 0.1s;
             color: #b0c49e;
         }
-
         .delete-icon:hover {
             color: #cf5a5a;
             transform: scale(1.05);
         }
-
         .answer-number {
             font-size: 2rem;
             font-weight: 700;
             line-height: 1.2;
             color: #3a7744;
         }
-
         .ans-label {
             font-size: 0.7rem;
             letter-spacing: 0.5px;
             font-weight: 500;
             color: #6f8f63;
         }
-
-        hr {
-            background-color: #cfdec5;
-            opacity: 0.6;
-        }
-
         .badge-base {
             background: #dbefd2;
             padding: 4px 12px;
             border-radius: 30px;
             font-size: 0.8rem;
         }
-
-        /* =========  LOG SECTION STYLES ========= */
+        /* Log section */
         .log-card {
             background: #fefef7;
             border-radius: 28px;
             border: 1px solid #cde0c0;
-            transition: all 0.2s;
         }
-
         .log-container {
             max-height: 260px;
             overflow-y: auto;
@@ -211,19 +149,11 @@
             border-radius: 20px;
             padding: 0.25rem;
         }
-
         .log-item {
             font-size: 0.8rem;
             padding: 0.6rem 0.8rem;
             border-bottom: 1px solid #e2edda;
-            transition: 0.1s;
-            font-family: 'Kanit', monospace;
         }
-
-        .log-item:last-child {
-            border-bottom: none;
-        }
-
         .log-time {
             font-weight: 600;
             color: #568c42;
@@ -233,12 +163,6 @@
             display: inline-block;
             font-size: 0.7rem;
         }
-
-        .log-message {
-            word-break: break-word;
-            color: #2c3a24;
-        }
-
         .btn-clear-log {
             background: transparent;
             border: 1px solid #cbdcc0;
@@ -246,43 +170,16 @@
             border-radius: 40px;
             padding: 4px 12px;
             font-size: 0.75rem;
-            transition: all 0.2s;
         }
-
         .btn-clear-log:hover {
             background: #e9f3e3;
-            border-color: #8fb573;
-            color: #2f5a24;
         }
-
-        /* =========  FOOTER ENHANCED STYLES ========= */
         .footer-enhanced {
             background: rgba(255, 255, 240, 0.92);
             backdrop-filter: blur(4px);
             border-top: 2px solid #d4e8ca;
             border-radius: 28px 28px 0 0;
-            transition: all 0.2s;
         }
-
-        .footer-enhanced a {
-            transition: all 0.2s ease;
-            text-decoration: none;
-        }
-
-        .footer-enhanced a:hover {
-            color: #2f6b2f !important;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-
-        .badge-version {
-            background: #eaf5e4;
-            color: #2a5c24;
-            font-weight: 500;
-            border: 1px solid #c2dcb2;
-        }
-
-        /* =========  SPLASH SCREEN STYLES ========= */
         .splash-screen {
             position: fixed;
             top: 0;
@@ -295,92 +192,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.5s ease;
             opacity: 1;
             visibility: visible;
         }
-
-        .splash-screen.hide {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .splash-logo {
-            width: 120px;
-            height: auto;
-            margin-bottom: 20px;
-            animation: pulse 1.2s infinite ease-in-out;
-        }
-
-        .splash-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #2c5e2a;
-            margin-bottom: 8px;
-        }
-
-        .splash-sub {
-            font-size: 0.9rem;
-            color: #6c9e5c;
-            letter-spacing: 1px;
-        }
-
-        .spinner-wave {
-            display: flex;
-            gap: 5px;
-            margin-top: 30px;
-        }
-
-        .spinner-wave span {
-            width: 8px;
-            height: 8px;
-            background-color: #4c8b3c;
-            border-radius: 50%;
-            display: inline-block;
-            animation: wave 1s infinite ease-in-out both;
-        }
-
-        .spinner-wave span:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .spinner-wave span:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @keyframes wave {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
-                opacity: 0.5;
-            }
-
-            40% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
+        .splash-screen.hide { opacity: 0; visibility: hidden; }
+        .splash-logo { width: 120px; margin-bottom: 20px; animation: pulse 1.2s infinite; }
         @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                opacity: 0.8;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(0.95);
-                opacity: 0.8;
-            }
+            0% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 1; }
         }
-
-        /* Scroll Progress Bar */
         #progressBar {
             position: fixed;
             top: 0;
@@ -388,483 +209,329 @@
             width: 0%;
             height: 4px;
             background-color: #dcc42a;
-            z-index: 9999;
+            z-index: 9998;
             transition: width 0.1s;
         }
     </style>
 </head>
-
-<body class="pt-4 pb-5">
-    <!-- Scroll Progress Bar -->
+<body>
     <div id="progressBar"></div>
-
-    <!-- Splash Screen -->
     <div id="splashScreen" class="splash-screen">
-        <img src="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png"
-            alt="ถุงพลัส" class="splash-logo">
+        <img src="https://i.supaimg.com/0bb45aa1-578e-4a4f-9427-4b59f2356d46/1e55ca50-cea4-4705-9984-c691c7b874c4.png" alt="logo" class="splash-logo">
         <div class="splash-title">ถุงพลัส</div>
-        <div class="splash-sub">PalletPro · พร้อมบันทึกการทำงาน</div>
-        <div class="spinner-wave">
-            <span></span><span></span><span></span>
-        </div>
+        <div class="splash-sub">เชื่อมต่อ Firebase & โหลดข้อมูล...</div>
+        <div class="spinner-wave mt-3"><span></span><span></span><span></span></div>
     </div>
 
     <div class="container px-3 px-md-4" style="max-width: 640px;">
-        <!-- หัวข้อ + สไตล์มินิมอล -->
-        <div class="d-flex justify-content-between align-items-center mb-4 mt-2" data-aos="fade-down"
-            data-aos-duration="600">
+        <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
             <div>
-                <h1 class="display-6 fw-semibold" style="color: #2c5e2a;">
-                    <i class="bi bi-bag-check-fill me-2" style="color: #538e3c;"></i> ถุงพลัส
-                </h1>
-                <p class="text-muted small mt-1 mb-0">PalletPro คำนวณงานแบบเร็ว · พร้อมประวัติการทำงาน</p>
+                <h1 class="display-6 fw-semibold" style="color:#2c5e2a;"><i class="bi bi-bag-check-fill me-2"></i> ถุงพลัส</h1>
+                <p class="text-muted small">PalletPro · บันทึกงานบน Firebase (CRUD)</p>
             </div>
-            <button onclick="addJobWithToast()" class="btn btn-soft-green rounded-pill px-4 py-2 shadow-sm">
-                <i class="bi bi-plus-circle me-1"></i> เพิ่มงาน
-            </button>
+            <button onclick="addNewJob()" class="btn btn-soft-green rounded-pill px-4 py-2 shadow-sm"><i class="bi bi-plus-circle me-1"></i> เพิ่มงาน</button>
         </div>
 
-        <!-- การตั้งค่าตัวแปรหลัก (ตัวลบพาเลท) -->
-        <div class="mb-4" data-aos="fade-up" data-aos-duration="600" data-aos-delay="80">
+        <!-- ค่าตัวลบพาเลท (X) -->
+        <div class="mb-4">
             <div class="base-input-card p-3 p-md-4 bg-white shadow-sm">
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-sliders2 fs-5 text-success-emphasis"></i>
-                        <label class="fw-semibold mb-0 text-dark-emphasis">ค่าตัวลบพาเลท (X)</label>
-                        <span class="badge-base ms-1"><i class="bi bi-calculator-fill me-1"></i> ค่าเริ่มต้น 90</span>
+                        <label class="fw-semibold mb-0">ค่าตัวลบพาเลท (X)</label>
+                        <span class="badge-base"><i class="bi bi-calculator-fill me-1"></i> ค่าเริ่มต้น 90</span>
                     </div>
                     <div class="d-flex align-items-center gap-2 bg-soft-mint px-3 py-1 rounded-4">
-                        <input type="number" id="baseValue"
-                            class="form-control form-control-sm text-center fw-bold border-0 bg-transparent"
-                            style="width: 95px; font-size: 1.4rem; outline: none;" value="90" step="1">
-                        <span class="fw-semibold text-secondary">พาเลท</span>
+                        <input type="number" id="baseValue" class="form-control form-control-sm text-center fw-bold border-0 bg-transparent" style="width: 95px; font-size: 1.4rem;" value="90" step="1">
+                        <span class="fw-semibold">พาเลท</span>
                     </div>
                 </div>
-                <div class="small text-secondary mt-2 d-flex gap-2 align-items-center">
-                    <i class="bi bi-info-circle-fill"></i>
-                    <span>ผลลัพธ์ B - X = จำนวนพาเลทสุทธิ (ปรับค่า X ได้ทันที)</span>
-                </div>
+                <div class="small text-secondary mt-2"><i class="bi bi-info-circle-fill me-1"></i> ผลลัพธ์ = B - X (สามารถปรับ X ได้ทันที)</div>
             </div>
         </div>
 
-        <!-- รายการงานทั้งหมด จะถูกเพิ่มเข้ามาในนี้ -->
-        <div id="jobList" class="d-flex flex-column gap-3">
-            <!-- งานจะแสดงแบบ dynamic ผ่าน JS -->
-        </div>
+        <!-- รายการงาน (jobs) -->
+        <div id="jobList" class="d-flex flex-column gap-3"></div>
 
-        <!-- =========  NEW ACTIVITY LOG SECTION ========= -->
-        <div class="mt-4" data-aos="fade-up" data-aos-duration="500">
+        <!-- บันทึกประวัติ Logs (Firebase) -->
+        <div class="mt-4">
             <div class="log-card p-3 p-md-4 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex gap-2 align-items-center">
                         <i class="bi bi-clock-history fs-5 text-success"></i>
-                        <h5 class="fw-semibold mb-0"> Logs บันทึกการทำงาน</h5>
+                        <h5 class="fw-semibold mb-0">Logs บันทึกการทำงาน</h5>
                         <span id="logCountBadge" class="badge bg-secondary-subtle text-dark rounded-pill">0</span>
                     </div>
-                    <button id="clearLogBtn" class="btn-clear-log"><i class="bi bi-trash3 me-1"></i> ล้าง logs ทั้งหมด</button>
+                    <button id="clearLogsBtn" class="btn-clear-log"><i class="bi bi-trash3 me-1"></i> ล้าง logs ทั้งหมด</button>
                 </div>
-                <div class="log-container" id="logContainer">
-                    <div class="text-center text-muted small py-3">ยังไม่มีบันทึกการทำงาน</div>
-                </div>
-                <div class="small text-secondary mt-2 text-center opacity-50">
-                    <i class="bi bi-info-circle"></i> บันทึกการกรอกค่า A/B, ผลลัพธ์, เพิ่ม/ลบงาน, เปลี่ยนค่าตัวลบ
+                <div id="logContainer" class="log-container">
+                    <div class="text-center text-muted small py-3">กำลังโหลด logs...</div>
                 </div>
             </div>
         </div>
 
-        <!-- =========  ENHANCED FOOTER (FIXED & IMPROVED) ========= -->
-        <footer class="footer-enhanced mt-4 pt-3 pb-2 px-3 px-md-4 shadow-sm">
-            <div class="row align-items-center g-3">
-                <div class="col-md-6 text-center text-md-start">
-                    <div class="small text-secondary">
-                        <i class="bi bi-c-circle me-1"></i>
-                        <span id="currentYear"></span>
-                        <a href="https://sumettampornsak.vercel.app" target="_blank"
-                            class="text-green-soft fw-semibold text-decoration-none mx-1">
-                            Sumett Ampornsak
-                        </a>
-                        <span class="mx-1 d-none d-md-inline">•</span>
-                        <span class="d-block d-md-inline">All rights reserved.</span>
-                    </div>
-                </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <span
-                        class="badge-version badge rounded-pill d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2">
-                        <i class="bi bi-tag-fill"></i> เวอร์ชัน: 5.0.0
-                    </span>
-                </div>
-                <div class="col-12 mt-2">
-                    <div class="text-center opacity-75 small" style="font-size: 0.7rem;">
-                        <i class="bi bi-dot"></i> Last Updated: 24 เมษายน 2569 <i class="bi bi-dot"></i>
-                    </div>
-                </div>
-            </div>
+        <footer class="footer-enhanced mt-4 pt-3 pb-2 px-3 text-center small text-secondary">
+            © <span id="currentYear"></span> <a href="https://sumettampornsak.vercel.app" target="_blank" class="text-green-soft">Sumett Ampornsak</a> · เวอร์ชัน Firebase CRUD 6.0.1
         </footer>
-        <!-- =========  END FOOTER ========= -->
-    </div>
-    <!-- end container -->
-
-    <!-- Floating Action Button -->
-    <div class="position-fixed bottom-0 end-0 p-3 z-3" style="bottom: 20px; right: 16px;">
-        <button onclick="addJobWithToast()"
-            class="floating-add d-flex align-items-center justify-content-center shadow-lg border-0">
-            <i class="bi bi-plus-lg fs-1 fw-bold"></i>
-        </button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <div class="position-fixed bottom-0 end-0 p-3 z-3">
+        <button onclick="addNewJob()" class="floating-add d-flex align-items-center justify-content-center shadow-lg border-0"><i class="bi bi-plus-lg fw-bold"></i></button>
+    </div>
+
     <script>
-        navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data.type === 'LOGS_RESULT') {
-                activityLogs = event.data.payload || [];
-                renderLogs();
+        // ======================== FIREBASE CONFIGURATION ========================
+        // 🔧 กรุณาแทนที่ค่าด้วย config ของคุณจาก Firebase Console
+        const firebaseConfig = {
+  apiKey: "AIzaSyC4ASnt4d4bqKY2IQPa4xQQeBrVQFevT9M",
+  authDomain: "palletpro-db.firebaseapp.com",
+  projectId: "palletpro-db",
+  storageBucket: "palletpro-db.firebasestorage.app",
+  messagingSenderId: "750210916860",
+  appId: "1:750210916860:web:6f425f8b206eaf39dc5279"
+};
+        
+        // เริ่มต้น Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const jobsRef = database.ref("jobs");
+        const logsRef = database.ref("logs");
+
+        // Global state
+        let currentJobs = [];      // เก็บ jobs array ปัจจุบันสำหรับใช้ render
+        let currentLogs = [];
+
+        // Helper: แสดง SweetAlert แจ้งเตือน
+        function showToast(icon, title, timer = 1500) {
+            Swal.fire({ icon, title, toast: true, timer, showConfirmButton: false, position: 'top-end' });
+        }
+
+        // บันทึก Log ลง Firebase
+        async function addSystemLog(message, relatedJobId = null) {
+            const newLogRef = logsRef.push();
+            const logEntry = {
+                timestamp: new Date().toISOString(),
+                message: message,
+                jobId: relatedJobId,
+                readableTime: new Date().toLocaleString('th-TH', { hour12: false })
+            };
+            await newLogRef.set(logEntry);
+        }
+
+        // เรนเดอร์ jobs ทั้งหมด (data จาก Firebase)
+        function renderJobs() {
+            const container = document.getElementById('jobList');
+            if (!container) return;
+            if (!currentJobs.length) {
+                container.innerHTML = `<div class="text-center p-5 text-muted bg-white rounded-4 shadow-sm"><i class="bi bi-inbox fs-1"></i><p class="mt-2">ยังไม่มีงาน กดปุ่ม + เพื่อเพิ่มงาน</p></div>`;
+                return;
+            }
+            const baseX = parseFloat(document.getElementById('baseValue').value) || 90;
+            let html = '';
+            currentJobs.forEach((job, idx) => {
+                const a = job.a ?? 0;
+                const b = job.b ?? 0;
+                const result = (b - baseX).toFixed(2);
+                html += `
+                    <div class="job-card p-3 p-md-4" data-job-id="${job.id}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="job-number"><i class="bi bi-briefcase-fill me-1"></i> งานที่ ${idx+1}</div>
+                            <i class="bi bi-trash3 delete-icon fs-5" onclick="deleteJobById('${job.id}')"></i>
+                        </div>
+                        <div class="row g-3 align-items-end">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-secondary">ค่าถุง (A)</label>
+                                <input type="number" id="a_${job.id}" class="form-control form-control-lg-custom" value="${a}" step="any" placeholder="A">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-secondary">ค่าพาเลท (B)</label>
+                                <input type="number" id="b_${job.id}" class="form-control form-control-lg-custom" value="${b}" step="any" placeholder="B">
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                    <div class="result-badge flex-grow-1 text-center">
+                                        <div class="ans-label">ผลลัพธ์สุทธิ (B - X)</div>
+                                        <div class="answer-number" id="result_${job.id}">${result}</div>
+                                        <small class="text-muted">X = ${baseX}</small>
+                                    </div>
+                                    <button class="btn btn-soft-green rounded-pill px-4" onclick="calculateAndUpdate('${job.id}')">
+                                        <i class="bi bi-calculator-fill me-1"></i> คำนวณ & บันทึก
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // คำนวณสำหรับ job ใด job หนึ่งแล้วอัปเดต Firebase
+        window.calculateAndUpdate = async function(jobId) {
+            const aInput = document.getElementById(`a_${jobId}`);
+            const bInput = document.getElementById(`b_${jobId}`);
+            if (!aInput || !bInput) return;
+            const aVal = parseFloat(aInput.value) || 0;
+            const bVal = parseFloat(bInput.value) || 0;
+            const baseX = parseFloat(document.getElementById('baseValue').value) || 90;
+            const result = bVal - baseX;
+            
+            // อัปเดตใน Firebase
+            await jobsRef.child(jobId).update({
+                a: aVal,
+                b: bVal,
+                updatedAt: firebase.database.ServerValue.TIMESTAMP,
+                lastResult: result
+            });
+            await addSystemLog(`🧮 คำนวณงาน ID:${jobId.slice(-6)} | A=${aVal} B=${bVal} → ผลลัพธ์=${result.toFixed(2)}`, jobId);
+            showToast('success', 'คำนวณและบันทึกสำเร็จ', 1200);
+        };
+
+        // ลบงาน
+        window.deleteJobById = async function(jobId) {
+            const result = await Swal.fire({
+                title: 'ยืนยันการลบ',
+                text: 'ลบงานนี้และข้อมูลทั้งหมด?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#cf5a5a',
+                confirmButtonText: 'ลบเลย',
+                cancelButtonText: 'ยกเลิก'
+            });
+            if (result.isConfirmed) {
+                await jobsRef.child(jobId).remove();
+                await addSystemLog(`🗑️ ลบงาน ID:${jobId.slice(-6)}`, jobId);
+                showToast('success', 'ลบงานเรียบร้อย', 1200);
+            }
+        };
+
+        // เพิ่มงานใหม่
+        window.addNewJob = async function() {
+            const newJobRef = jobsRef.push();
+            const newJob = {
+                a: 0,
+                b: 0,
+                lastResult: 0,
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
+            };
+            await newJobRef.set(newJob);
+            await addSystemLog(`✨ สร้างงานใหม่ ID:${newJobRef.key.slice(-6)}`, newJobRef.key);
+            showToast('success', 'เพิ่มงานใหม่แล้ว', 1000);
+        };
+
+        // ล้าง logs ทั้งหมด
+        document.getElementById('clearLogsBtn')?.addEventListener('click', async () => {
+            const confirm = await Swal.fire({ title: 'ล้างประวัติทั้งหมด?', text: 'Logs จะถูกลบจาก Firebase', icon: 'warning', showCancelButton: true });
+            if (confirm.isConfirmed) {
+                await logsRef.remove();
+                showToast('info', 'ล้าง logs เรียบร้อย');
             }
         });
-        if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .then(reg => console.log('SW registered:', reg))
-    .catch(err => console.error('SW failed:', err));
-}
-        // ---------- LOGGING SYSTEM --------------
-        let activityLogs = [];     // array of { timestamp, message }
-        const MAX_LOG_ENTRIES = 150;
 
-        function formatTimestamp() {
-            const now = new Date();
-            return now.toLocaleString('th-TH', { hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        }
-
-        // เพิ่มบันทึกใหม่ (message)
-        function addLogEntry(message) {
-            const timestamp = formatTimestamp();
-            const log = { timestamp, message };
-
-            activityLogs.unshift(log);
-            if (activityLogs.length > MAX_LOG_ENTRIES) activityLogs.pop();
-
-            renderLogs();
-
-            // ส่งไปเก็บถาวร
-            if (navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                    type: 'ADD_LOG',
-                    payload: log
-                });
-            }
-        }
-
-        // ล้าง log ทั้งหมด
-        function clearAllLogs() {
-            activityLogs = [];
-            renderLogs();
-
-            if (navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                    type: 'CLEAR_LOGS'
-                });
-            }
-
-            Swal.fire({
-                icon: 'info',
-                title: 'ล้างประวัติเรียบร้อย',
-                toast: true,
-                timer: 1200,
-                showConfirmButton: false,
-                position: 'top-end'
-            });
-        }
-
+        // เรนเดอร์ logs จาก Firebase
         function renderLogs() {
             const container = document.getElementById('logContainer');
             const badge = document.getElementById('logCountBadge');
             if (!container) return;
-            if (activityLogs.length === 0) {
-                container.innerHTML = `<div class="text-center text-muted small py-3">ยังไม่มีการบันทึก...</div>`;
-                if (badge) badge.innerText = '0';
+            if (!currentLogs.length) {
+                container.innerHTML = `<div class="text-center text-muted small py-3">ยังไม่มีบันทึกการทำงาน</div>`;
+                if(badge) badge.innerText = '0';
                 return;
             }
-            if (badge) badge.innerText = activityLogs.length;
-            const logsHtml = activityLogs.map(log => `
+            if(badge) badge.innerText = currentLogs.length;
+            const logsHtml = currentLogs.map(log => `
                 <div class="log-item">
                     <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                        <span class="log-time"><i class="bi bi-stopwatch me-1"></i>${log.timestamp}</span>
+                        <span class="log-time"><i class="bi bi-clock me-1"></i>${log.readableTime || new Date(log.timestamp).toLocaleString('th-TH')}</span>
                     </div>
                     <div class="log-message mt-1">${escapeHtml(log.message)}</div>
                 </div>
             `).join('');
             container.innerHTML = logsHtml;
         }
+        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function (m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
-                return c;
-            });
-        }
-
-        // ---------- AOS INIT ----------
-        let aosInitialized = false;
-        function initAOS() {
-            if (!aosInitialized) {
-                AOS.init({
-                    duration: 800,
-                    once: true,
-                    offset: 10,
-                    easing: 'ease-out-sine'
-                });
-                aosInitialized = true;
-            }
-        }
-
-        // Splash
-        function hideSplash() {
-            const splash = document.getElementById('splashScreen');
-            if (splash) {
-                splash.classList.add('hide');
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                }, 500);
-            }
-            initAOS();
-        }
-
-        let isPageLoaded = false;
-        let splashTimer = null;
-        window.addEventListener('load', () => {
-            isPageLoaded = true;
-            if (splashTimer) clearTimeout(splashTimer);
-            setTimeout(() => {
-                if (isPageLoaded) hideSplash();
-            }, 300);
-        });
-        splashTimer = setTimeout(() => {
-            if (!isPageLoaded) hideSplash();
-        }, 2500);
-
-        let jobCount = 0;
-
-        // คำนวณการ์ดเดียว (เพิ่มพารามิเตอร์ skipLog เพื่อควบคุมการบันทึก)
-        function calculateCard(card, skipLog = false) {
-            const aInput = card.querySelector('.valA');
-            const bInput = card.querySelector('.valB');
-            const ans1Span = card.querySelector('.ans1');
-            const ans2Span = card.querySelector('.ans2');
-            const baseLabelSpan = card.querySelector('.base-label');
-            if (!aInput || !bInput || !ans1Span || !ans2Span || !baseLabelSpan) return;
-
-            const a = parseFloat(aInput.value) || 0;
-            const b = parseFloat(bInput.value) || 0;
-            const base = parseFloat(document.getElementById('baseValue').value) || 0;
-
-            const resultBag = b - a;
-            const resultPallet = b - base;
-
-            ans1Span.innerText = resultBag.toLocaleString();
-            ans2Span.innerText = resultPallet.toLocaleString();
-            baseLabelSpan.innerText = base;
-
-            // บันทึก log เฉพาะเมื่อไม่ได้ skip และมี card (กรอกค่าโดยผู้ใช้)
-            if (!skipLog) {
-                const jobId = card.dataset.jobId || '?';
-                // ข้อความแสดงการกรอกและผลลัพธ์
-                const msg = `งานที่ ${jobId} : A = ${a}, B = ${b}  →  ถุงสุทธิ = ${resultBag} | พาเลทสุทธิ = ${resultPallet} (ตัวลบ X=${base})`;
-                addLogEntry(msg);
-            }
-        }
-
-        // อัพเดทการคำนวณทั้งหมด (เมื่อ base เปลี่ยน หรือ init)
-        function updateAllCalculations(skipLog = true) {
-            const allCards = document.querySelectorAll('.job-card');
-            allCards.forEach(card => calculateCard(card, skipLog));
-        }
-
-        // เพิ่มงานใหม่พร้อมบันทึก log
-        function addJobWithToast() {
-            addJob();
-            Swal.fire({
-                icon: 'success',
-                title: 'เพิ่มงานสำเร็จ',
-                text: 'กรอกค่าเพื่อดูผลลัพธ์ และระบบจะบันทึกการทำงาน',
-                toast: true,
-                timer: 1800,
-                showConfirmButton: false,
-                background: '#ffffff',
-                iconColor: '#4c8b3c',
-                position: 'top-end'
-            });
-        }
-
-        function addJob() {
-            jobCount++;
-            const jobListDiv = document.getElementById('jobList');
-            const newCard = document.createElement('div');
-            newCard.id = `job-card-${jobCount}`;
-            newCard.className = "job-card p-4 p-md-4 position-relative";
-            newCard.setAttribute('data-aos', 'fade-up');
-            newCard.setAttribute('data-aos-duration', '450');
-            newCard.dataset.jobId = jobCount;
-
-            newCard.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="job-number d-inline-flex align-items-center gap-1">
-                        <i class="bi bi-briefcase-fill"></i> งานที่ ${jobCount}
-                    </div>
-                    <div class="delete-icon" onclick="confirmRemoveJob(${jobCount})" title="ลบงาน">
-                        <i class="bi bi-trash3 fs-5"></i>
-                    </div>
-                </div>
-                
-                <div class="row g-3 mb-4">
-                    <div class="col-6">
-                        <label class="form-label fw-semibold mb-1 text-secondary" style="font-size: 2.1rem;"><i class="bi bi-arrow-return-left me-1"></i> ค่า A</label>
-                        <input type="number" oninput="calculateCard(this.closest('.job-card'), false)" 
-                               class="valA form-control form-control-lg-custom py-2 px-3 text-center" 
-                               placeholder="0" value="" step="1">
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label fw-semibold mb-1 text-secondary" style="font-size: 2.1rem;"><i class="bi bi-arrow-return-right me-1"></i> ค่า B</label>
-                        <input type="number" oninput="calculateCard(this.closest('.job-card'), false)" 
-                               class="valB form-control form-control-lg-custom py-2 px-3 text-center" 
-                               placeholder="0" value="" step="1">
-                    </div>
-                </div>
-                
-                <div class="row g-2 text-center pt-2 border-top" style="border-top: 1px dashed #cfe2c5 !important;">
-                    <div class="col-6">
-                        <div class="result-badge p-2">
-                            <div class="ans-label text-uppercase small fw-semibold">
-                                <i class="bi bi-box-seam"></i> ถุงสุทธิ (B-A)
-                            </div>
-                            <div class="answer-number ans1 fw-bold" style="font-size: 3.1rem;">0</div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="result-badge p-2">
-                            <div class="ans-label text-uppercase small fw-semibold">
-                                <i class="bi bi-palette"></i> พาเลทสุทธิ (B-<span class="base-label fw-bold">90</span>)
-                            </div>
-                            <div class="answer-number ans2 fw-bold" style="font-size: 3.1rem;">0</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-end mt-2 opacity-50 small">
-                    <i class="bi bi-calculator"></i> คำนวนอัตโนมัติ
-                </div>
-            `;
-
-            if (jobListDiv.firstChild) {
-                jobListDiv.insertBefore(newCard, jobListDiv.firstChild);
-            } else {
-                jobListDiv.appendChild(newCard);
-            }
-
-            // คำนวณค่าเริ่มต้นโดยไม่บันทึก log (เพื่อแสดงผลแต่ไม่รบกวน log)
-            calculateCard(newCard, true);
-            // บันทึกการเพิ่มงาน (เริ่มรายการใหม่)
-            addLogEntry(`เพิ่มงานที่ : ${jobCount} (รอการกรอกข้อมูล)`);
-            if (aosInitialized) AOS.refresh();
-        }
-
-        // ลบงานพร้อมบันทึก log
-        function confirmRemoveJob(jobId) {
-            const targetCard = document.getElementById(`job-card-${jobId}`);
-            if (!targetCard) {
-                Swal.fire('ไม่พบรายการ', 'งานนี้ถูกลบไปแล้ว', 'info');
-                return;
-            }
-            // ดึงข้อมูล A,B สุดท้ายเพื่อ log
-            const aVal = targetCard.querySelector('.valA')?.value || '?';
-            const bVal = targetCard.querySelector('.valB')?.value || '?';
-            Swal.fire({
-                title: 'ต้องการลบงานนี้?',
-                text: `งานที่ ${jobId} (A=${aVal}, B=${bVal}) จะถูกลบ`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#4c8b3c',
-                cancelButtonColor: '#b0b9a8',
-                confirmButtonText: 'ใช่, ลบเลย',
-                cancelButtonText: 'ยกเลิก',
-                background: '#ffffff',
-                backdrop: `rgba(70, 90, 50, 0.1)`,
-                customClass: { popup: 'rounded-4 shadow-lg border-0' }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    addLogEntry(`ผู้ใช้ลบงานที่ : ${jobId}`);
-                    if (targetCard) targetCard.remove();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ลบสำเร็จ',
-                        toast: true,
-                        timer: 1300,
-                        showConfirmButton: false,
-                        background: '#f6fff0',
-                        iconColor: '#4c8b3c',
-                        position: 'top-end'
+        // ---- Firebase Real-time listeners ----
+        function initFirebaseListeners() {
+            // ฟังการเปลี่ยนแปลงของ jobs
+            jobsRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                const jobsArray = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        jobsArray.push({
+                            id: key,
+                            a: data[key].a || 0,
+                            b: data[key].b || 0,
+                            lastResult: data[key].lastResult || 0,
+                            createdAt: data[key].createdAt,
+                            updatedAt: data[key].updatedAt
+                        });
                     });
-                    if (aosInitialized) AOS.refresh();
                 }
+                // เรียงตาม createdAt (เก่าสุดบน?)
+                jobsArray.sort((x,y) => (x.createdAt || 0) - (y.createdAt || 0));
+                currentJobs = jobsArray;
+                renderJobs();
+                // ซ่อน splash screen เมื่อโหลด jobs ครั้งแรก
+                const splash = document.getElementById('splashScreen');
+                if(splash && splash.classList) splash.classList.add('hide');
+                setTimeout(() => { if(splash) splash.style.display = 'none'; }, 500);
+            });
+
+            // ฟัง logs แบบเรียลไทม์
+            logsRef.orderByChild('timestamp').limitToLast(100).on('value', (snapshot) => {
+                const logsArr = [];
+                if(snapshot.val()) {
+                    Object.values(snapshot.val()).forEach(log => {
+                        logsArr.push(log);
+                    });
+                }
+                logsArr.reverse(); // ใหม่ล่าสุดอยู่บน
+                currentLogs = logsArr;
+                renderLogs();
             });
         }
 
-        // ตัวแปร base value event
-        const baseInputElem = document.getElementById('baseValue');
-        if (baseInputElem) {
-            baseInputElem.addEventListener('input', function (e) {
-                const newBase = parseFloat(e.target.value) || 0;
-                addLogEntry(`ผู้ใช้เปลี่ยนค่าตัวลบพาเลท (X) เป็น : ${newBase}`);
-                updateAllCalculations(true);  // อัปเดตแต่ไม่บันทึก log ซ้ำ (เพราะเราบันทึกแค่เปลี่ยน base)
-            });
-        }
-
-        // ฟังก์ชันปี ค.ศ.
-        function setCurrentYear() {
-            const yearSpan = document.getElementById('currentYear');
-            if (yearSpan) yearSpan.innerText = new Date().getFullYear();
-        }
-
-        // ปุ่ม clear log
-        document.addEventListener('DOMContentLoaded', () => {
-
-            if (navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                    type: 'GET_LOGS'
-                });
-            }
-            const clearBtn = document.getElementById('clearLogBtn');
-            if (clearBtn) clearBtn.addEventListener('click', clearAllLogs);
-            // เพิ่มงานแรกเริ่มต้น
-            addJob();
-            // อัปเดตทุกอย่างโดยไม่บันทึก log (เฉพาะค่าเริ่มต้น)
-            updateAllCalculations(true);
-            setCurrentYear();
-
-            // เพิ่ม log เริ่มต้นระบบ
-            addLogEntry('ระบบถุงพลัส PalletPro เริ่มทำงาน');
+        // เมื่อค่า X เปลี่ยนแปลง ให้ rerender เพื่อให้ผลลัพธ์แสดงตาม X ใหม่ (โดยไม่ต้องคำนวณใหม่ทันที แต่ UI จะ update)
+        document.getElementById('baseValue')?.addEventListener('input', () => {
+            renderJobs();  // แค่แสดงผลลัพธ์ตามค่า X ใหม่ (ไม่บันทึกค่าลง job จนกว่าจะกดคำนวณ)
+            // บันทึก log การเปลี่ยน X (ทางเลือก)
+            const newX = document.getElementById('baseValue').value;
+            addSystemLog(`📏 เปลี่ยนค่าตัวลบพาเลทเป็น ${newX}`);
         });
 
-        // เปิดเผย global functions
-        window.confirmRemoveJob = confirmRemoveJob;
-        window.addJobWithToast = addJobWithToast;
-        window.calculateCard = calculateCard;
-        window.updateAllCalculations = updateAllCalculations;
-        window.addJob = addJob;
-
-        // Scroll progress bar
-        const progressBar = document.getElementById('progressBar');
+        // Scroll progress
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + '%';
+            document.getElementById('progressBar').style.width = scrolled + "%";
         });
+
+        // ปีปัจจุบัน
+        document.getElementById('currentYear').innerText = new Date().getFullYear();
+
+        // เริ่มต้นระบบ และซ่อน splash เมื่อเชื่อมต่อสำเร็จ
+        window.addEventListener('load', () => {
+            AOS.init({ duration: 600, once: true });
+            initFirebaseListeners();
+        });
+
+        // เตือนถ้า Firebase config ยังไม่ถูกต้อง
+        if(firebaseConfig.apiKey === "YOUR_API_KEY") {
+            setTimeout(() => {
+                Swal.fire({ icon: 'warning', title: '⚠️ ยังไม่ได้ตั้งค่า Firebase', text: 'กรุณาแก้ไข firebaseConfig ในโค้ดให้เป็นค่าจริงจาก Firebase Console', confirmButtonText: 'ตกลง' });
+            }, 1000);
+        }
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // PWA service worker (optional) - รับจาก original
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW error:", err));
+        }
     </script>
 </body>
-
 </html>
