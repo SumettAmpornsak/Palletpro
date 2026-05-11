@@ -1,4 +1,4 @@
-const CACHE_NAME = 'thungplus-v2';
+const CACHE_NAME = 'thungplus-v3';
 const urlsToCache = [
   '/',
   '/index.html',  // หรือชื่อไฟล์ HTML ของคุณ
